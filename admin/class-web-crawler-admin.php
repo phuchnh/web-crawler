@@ -115,7 +115,7 @@ class Web_Crawler_Admin {
 			->removeMenu();
 		
 		$option = tr_page( $resource, 'option', __( 'Setting' ), $settings )
-			->mapActions( [ 'GET' => 'option', 'PUT' => 'setting' ] )
+			->mapActions( [ 'GET' => 'option', 'PUT' => 'update_option' ] )
 			->addNewButton()
 			->removeMenu();
 		

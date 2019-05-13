@@ -7,6 +7,18 @@ $table->setColumns( 'domain_url', [
 		'label'   => 'Domain URL',
 		'actions' => [ 'edit', 'delete' ],
 	],
+	'id'         => [
+		'label'    => 'Setting',
+		'callback' => function ( $id, \App\Models\CrawlDomain $result ) {
+			if ( $result ) {
+				$url = tr_redirect()->toPage( 'crawl_domain', 'option', $id )->url;
+				
+				return '<a href="' . $url . '">' . 'Edit' . '</a>';
+			}
+			
+			return '';
+		},
+	],
 ] );
 
 try {

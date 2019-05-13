@@ -140,7 +140,7 @@ class CrawlDomainController extends Controller {
 	 * @return mixed
 	 */
 	public function option( $id ) {
-		$form = tr_form( $this->resource, 'setting', $id );
+		$form = tr_form( $this->resource, 'update_option', $id );
 		
 		return tr_view( 'crawl_domain.option', [ 'form' => $form ] );
 	}
@@ -154,10 +154,8 @@ class CrawlDomainController extends Controller {
 	 *
 	 * @return mixed
 	 */
-	public function setting( $id ) {
-		$form = tr_form( $this->resource, 'setting', $id );
-		
-		return tr_view( 'crawl_domain.option', [ 'form' => $form ] );
+	public function update_option( $id ) {
+		dd( $id );
 	}
 	
 	/**

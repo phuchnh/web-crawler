@@ -1,32 +1,31 @@
-<?php /** @noinspection PhpUnhandledExceptionInspection */
+<?php
+
 /**
  * @var $form \TypeRocket\Elements\Form
  */
 
-$domains = $form->select( 'crawl_domain_id' )->setLabel( 'Domain URL' );
-$domains->setModelOptions( new \App\Models\CrawlDomain, 'domain_url', 'id' );
-$domains->setAttributes( [ 'id' => 'crawl_domain', 'class' => 'crawl_domain' ] );
+$select = $form->select( 'Type' )->setOptions( [
+	'Text'  => 'text',
+	'Image' => 'image',
+	'HTML'  => 'html',
+] );
 
-// Render form
-$form->useJson();
+
+
+$box = tr_meta_box('Speakers');
+$box->addScreen( 'event' );
+$box->setCallback(function() {
+	$form = tr_form();
+	$repeater = $form->repeater('Speakers')->setFields([
+		$form->image('Photo'),
+		$form->text('Name'),
+		$form->text('Slides URL')
+	]);
+	
+	echo $repeater;
+});
+
 echo $form->open();
-echo $domains;
-echo $form->text( 'category_url' )->setLabel( 'Category URL' );
+echo $box;
 echo $form->submit( 'Update' );
 echo $form->close();
-
-$action = $form->getAction();
-
-dd($action);
-
-?>
-
-<script lang="js">
-  (function($) {
-    'use strict';
-    $(function() {
-      var $crawl_domain = $('#crawl_domain');
-      $crawl_domain.select2({ placeholder: 'Select an option' });
-    });
-  })(jQuery);
-</script>
