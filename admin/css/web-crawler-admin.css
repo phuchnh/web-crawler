@@ -2,3 +2,16 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+/**
+ * Select2 Styles
+ */
+div.typerocket-container .select2-container--default .select2-selection--single {
+    line-height: 1.5rem;
+    height: 2rem;
+    border-radius: 0;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #32373c;
+    font-size: 14px;
+}

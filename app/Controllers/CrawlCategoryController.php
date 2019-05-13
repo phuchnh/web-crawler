@@ -1,0 +1,169 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Models\CrawlCategory;
+use App\Models\CrawlDomain;
+use \TypeRocket\Controllers\Controller;
+use TypeRocket\Http\Request;
+
+class CrawlCategoryController extends Controller {
+	
+	protected $modelClass = CrawlCategory::class;
+	protected $resource = 'crawl_category';
+	
+	/**
+	 * The index page for admin
+	 *
+	 * @return mixed
+	 */
+	public function index() {
+		return tr_view( 'crawl_category.index' );
+	}
+	
+	/**
+	 * The add page for admin
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function add() {
+		$form = tr_form( $this->resource, 'create' );
+		
+		return tr_view( 'crawl_category.add', [
+			'form' => $form,
+		] );
+	}
+	
+	/**
+	 * Create item
+	 *
+	 * AJAX requests and normal requests can be made to this action
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function create() {
+		$request = new \TypeRocket\Http\Request();
+		
+		$options = [
+			'category_url' => 'required|unique:category_url:wp_crawl_categories',
+		];
+		
+		$validator = tr_validator( $options, $request->getFields() );
+		
+		if ( $validator->getErrors() ) {
+			$validator->flashErrors( $this->response );
+			
+			return tr_redirect()->toPage( $this->resource, 'add' )
+			                    ->withFields( $request->getFields() );
+		}
+		
+		$crawl_domain = new CrawlDomain;
+		$crawl_domain->findById( $this->request->getFields( 'crawl_domain_id' ) );
+		
+		$crawl_category                   = new CrawlCategory;
+		$crawl_category->crawl_domain_id  = $crawl_domain->id;
+		$crawl_category->category_url     = $this->request->getFields( 'category_url' );
+		$crawl_category->category_options = null;
+		
+		if ( ! $success = (boolean) $crawl_category->save() ) {
+			$this->response->flashNext( 'Category create failure', 'error' );
+			
+			return tr_redirect()->toPage( $this->resource, 'index' );
+		}
+		
+		$this->response->flashNext( 'Category created!' );
+		
+		return tr_redirect()->toPage( $this->resource, 'index' );
+	}
+	
+	/**
+	 * The edit page for admin
+	 *
+	 * @param $id
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function edit( $id ) {
+		$form = tr_form( $this->resource, 'update', $id );
+		
+		return tr_view( 'crawl_category.edit', [ 'form' => $form ] );
+	}
+	
+	/**
+	 * Update item
+	 *
+	 * AJAX requests and normal requests can be made to this action
+	 *
+	 * @param \App\Models\CrawlCategory $crawl_category
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function update( CrawlCategory $crawl_category ) {
+		$request = new Request();
+		
+		$options = [
+			'category_url' => 'required|unique:category_url:wp_crawl_domains@id:' . $crawl_category->id,
+		];
+		
+		$validator = tr_validator( $options, $request->getFields() );
+		
+		if ( $validator->getErrors() ) {
+			$validator->flashErrors( $this->response );
+			
+			return tr_redirect()->toPage( $this->resource, 'edit', $crawl_category->id )
+			                    ->withFields( $request->getFields() );
+		}
+		
+		$crawl_category->category_url     = $this->request->getFields( 'category_url' );
+		$crawl_category->category_options = null;
+		$crawl_category->save();
+		$this->response->flashNext( 'Category updated!' );
+		
+		return tr_redirect()->toPage( $this->resource, 'index' );
+	}
+	
+	/**
+	 * The show page for admin
+	 *
+	 * @param $id
+	 *
+	 * @return mixed
+	 */
+	public function show( $id ) {
+		// TODO: Implement show() method.
+	}
+	
+	/**
+	 * The delete page for admin
+	 *
+	 * @param $id
+	 *
+	 * @return mixed
+	 */
+	public function delete( $id ) {
+		// TODO: Implement delete() method.
+	}
+	
+	/**
+	 * Destroy item
+	 *
+	 * AJAX requests and normal requests can be made to this action
+	 *
+	 * @param \App\Models\CrawlCategory $crawl_category
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function destroy( CrawlCategory $crawl_category ) {
+		if ( ! $success = (boolean) $crawl_category->delete() ) {
+			return $this->response->flashNext( 'Category deleted failure!', 'error' );
+		}
+		$this->response->flashNext( 'Category deleted!' );
+		
+		return tr_redirect()->toPage( $this->resource, 'index' );
+	}
+}

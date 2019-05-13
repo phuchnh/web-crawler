@@ -43,11 +43,12 @@ class Web_Crawler_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS {$crawl_categories} (
             id               int(11) UNSIGNED                   NOT NULL AUTO_INCREMENT,
 		    crawl_domain_id  int(11) UNSIGNED                   NOT NULL,
-		    category_url     text                               NOT NULL,
+		    category_url     VARCHAR(191)                       NOT NULL,
 		    category_options longtext,
 		    created_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		    updated_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
 		    PRIMARY KEY (id),
+		    CONSTRAINT unique_category_url UNIQUE (category_url),
 		    FOREIGN KEY (crawl_domain_id) REFERENCES {$crawl_domains} (id) ON DELETE CASCADE
         ) {$charset_collate};";
 		
@@ -61,11 +62,12 @@ class Web_Crawler_Activator {
 		$crawl_domains   = $wpdb->prefix . 'crawl_domains';
 		$sql             = "CREATE TABLE IF NOT EXISTS {$crawl_domains} (
             id             int(11) UNSIGNED                   NOT NULL AUTO_INCREMENT,
-		    domain_url     text                               NOT NULL,
+		    domain_url     VARCHAR(191)                       NOT NULL,
 		    domain_options longtext,
 		    created_at     datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		    updated_at     datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-		    PRIMARY KEY (id)
+		    PRIMARY KEY (id),
+		    CONSTRAINT unique_domain_url UNIQUE (domain_url)
         ) {$charset_collate};";
 		
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
