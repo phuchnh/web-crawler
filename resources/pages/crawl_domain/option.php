@@ -15,9 +15,27 @@ $repeater->setFields([
     $form->text('Selector'),
 ]);
 
-$repeater->setLabel('Selectors');
+$repeater->setLabel('Options');
 
 echo $form->open();
+echo $form->text('domain_url')->setLabel('Domain URL')->setAttribute('disabled', 'disabled');
 echo $repeater;
 echo $form->submit('Update');
 echo $form->close();
+
+?>
+
+<script language="JavaScript">
+  (function($) {
+    'use strict';
+    $(function() {
+      TypeRocket.repeaterCallbacks.push(function($template) {
+        var $select = $template.find('select').select2({width: '100%'});
+
+        // Remove unused element after re-init select2
+        // file ./wp-content/plugins/web-crawler/admin/js/web-crawler-admin.js
+        $select.last().next().next().remove();
+      });
+    });
+  })(jQuery);
+</script>

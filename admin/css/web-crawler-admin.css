@@ -8,6 +8,7 @@
  */
 div.typerocket-container .select2-container--default .select2-selection--single {
     height: 2rem;
+    width: 100%;
     border-radius: 0;
     border: 1px solid #ddd;
     background-color: #fff;

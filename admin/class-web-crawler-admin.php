@@ -73,7 +73,7 @@ class Web_Crawler_Admin
     {
         wp_enqueue_style(
             'select2',
-            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css'
+            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.css'
         );
 
         wp_enqueue_style(
@@ -100,7 +100,7 @@ class Web_Crawler_Admin
 
         wp_enqueue_script(
             'select2',
-            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js',
             ['jquery']
         );
 
