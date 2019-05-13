@@ -42,12 +42,12 @@ class Web_Crawler_Admin
     private $version;
 
     /**
-     * @var mixed
+     * @var \TypeRocket\Register\Page
      */
     private $crawl_domain;
 
     /**
-     * @var mixed
+     * @var \TypeRocket\Register\Page
      */
     private $crawl_category;
 
@@ -71,9 +71,17 @@ class Web_Crawler_Admin
      */
     public function enqueue_styles()
     {
-        wp_enqueue_style('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
-        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/web-crawler-admin.css', [],
-            $this->version, 'all');
+        wp_enqueue_style(
+            'select2',
+            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css'
+        );
+
+        wp_enqueue_style(
+            $this->plugin_name,
+            plugin_dir_url(__FILE__) . 'css/web-crawler-admin.css',
+            [],
+            $this->version
+        );
     }
 
     /**
@@ -83,10 +91,18 @@ class Web_Crawler_Admin
      */
     public function enqueue_scripts()
     {
-        wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/web-crawler-admin.js', ['jquery'],
-            $this->version, false);
-        wp_enqueue_script('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
-            ['jquery']);
+        wp_enqueue_script(
+            $this->plugin_name,
+            plugin_dir_url(__FILE__) . 'js/web-crawler-admin.js',
+            ['jquery'],
+            $this->version
+        );
+
+        wp_enqueue_script(
+            'select2',
+            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
+            ['jquery']
+        );
 
     }
 
@@ -103,38 +119,31 @@ class Web_Crawler_Admin
     {
         $resource = 'crawl_domain';
         $settings = [
-            'menu'       => 'Web Crawler',
             'capability' => 'administrator',
+            'position'   => 999,
         ];
 
         $add = tr_page($resource, 'add', __('Add Domain'), $settings)
-            ->mapActions(['GET' => 'add', 'POST' => 'create'])
-            ->removeMenu();
+            ->mapActions(['GET' => 'add', 'POST' => 'create']);
 
         $delete = tr_page($resource, 'delete', __('Delete Domain'), $settings)
-            ->mapActions(['GET' => 'delete', 'DELETE' => 'destroy'])
-            ->removeMenu();
+            ->mapActions(['GET' => 'delete', 'DELETE' => 'destroy']);
 
         $edit = tr_page($resource, 'edit', __('Edit Domain'), $settings)
-            ->mapActions(['GET' => 'edit', 'PUT' => 'update'])
-            ->addNewButton()
-            ->removeMenu();
+            ->mapActions(['GET' => 'edit', 'PUT' => 'update']);
 
-        $option = tr_page($resource, 'edit_option', __('Setting'), $settings)
-            ->mapActions(['GET' => 'edit_option', 'PUT' => 'update_option'])
-            ->addNewButton()
-            ->removeMenu();
+        $edit_option = tr_page($resource, 'edit_option', __('Setting'), $settings)
+            ->mapActions(['GET' => 'edit_option', 'PUT' => 'update_option']);
 
         $index = tr_page($resource, 'index', __('List Domain'), $settings);
 
-        foreach ([$add, $delete, $edit, $option, $index] as $page) {
+        foreach ([$add, $delete, $edit, $edit_option, $index] as $page) {
             /** @var \TypeRocket\Register\Page $page */
-            $page->useController();
+            $page->useController()->addNewButton()->removeMenu();
         }
 
-        $this->crawl_domain = $index->apply($add, $delete, $edit, $option)
-                                    ->addNewButton()
-                                    ->setId('web_crawler');
+        $index->apply($add, $delete, $edit, $edit_option)->addNewButton();
+
 
     }
 
@@ -142,27 +151,31 @@ class Web_Crawler_Admin
     {
         $resource = 'crawl_category';
 
-        $add = tr_page($resource, 'add', __('Add Category'))
-            ->mapActions(['GET' => 'add', 'POST' => 'create'])
-            ->removeMenu();
+        $settings = [
+            'capability' => 'administrator',
+            'position'   => 999,
+        ];
 
-        $delete = tr_page($resource, 'delete', __('Delete Category'))
-            ->mapActions(['GET' => 'delete', 'DELETE' => 'destroy'])
-            ->removeMenu();
+        $add = tr_page($resource, 'add', __('Add Category'), $settings)
+            ->mapActions(['GET' => 'add', 'POST' => 'create']);
 
-        $edit = tr_page($resource, 'edit', __('Edit Category'))
-            ->mapActions(['GET' => 'edit', 'PUT' => 'update'])
-            ->addNewButton()
-            ->removeMenu();
+        $delete = tr_page($resource, 'delete', __('Delete Category'), $settings)
+            ->mapActions(['GET' => 'delete', 'DELETE' => 'destroy']);
 
-        $index = tr_page($resource, 'index', __('List Category'));
+        $edit = tr_page($resource, 'edit', __('Edit Category'), $settings)
+            ->mapActions(['GET' => 'edit', 'PUT' => 'update']);
 
-        foreach ([$add, $delete, $edit, $index] as $page) {
+        $edit_option = tr_page($resource, 'edit_option', __('Setting'), $settings)
+            ->mapActions(['GET' => 'edit_option', 'PUT' => 'update_option']);
+
+        $index = tr_page($resource, 'index', __('List Category'), $settings);
+
+        foreach ([$add, $delete, $edit, $edit_option, $index] as $page) {
             /** @var \TypeRocket\Register\Page $page */
-            $page->useController();
+            $page->useController()->addNewButton()->removeMenu();
         }
 
-        $this->crawl_category = $index->apply($add, $delete, $edit)->addNewButton();
+        $this->crawl_category = $index->apply($add, $delete, $edit, $edit_option)->addNewButton();
     }
 
     public function customize_menu_labels()
