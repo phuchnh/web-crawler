@@ -133,6 +133,34 @@ class CrawlDomainController extends Controller {
 	}
 	
 	/**
+	 * The option page for admin
+	 *
+	 * @param string $id
+	 *
+	 * @return mixed
+	 */
+	public function option( $id ) {
+		$form = tr_form( $this->resource, 'setting', $id );
+		
+		return tr_view( 'crawl_domain.option', [ 'form' => $form ] );
+	}
+	
+	/**
+	 * The option page for admin
+	 *
+	 * AJAX requests and normal requests can be made to this action
+	 *
+	 * @param string $id
+	 *
+	 * @return mixed
+	 */
+	public function setting( $id ) {
+		$form = tr_form( $this->resource, 'setting', $id );
+		
+		return tr_view( 'crawl_domain.option', [ 'form' => $form ] );
+	}
+	
+	/**
 	 * Destroy item
 	 *
 	 * AJAX requests and normal requests can be made to this action

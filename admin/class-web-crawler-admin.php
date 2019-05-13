@@ -114,16 +114,21 @@ class Web_Crawler_Admin {
 			->addNewButton()
 			->removeMenu();
 		
+		$option = tr_page( $resource, 'option', __( 'Setting' ), $settings )
+			->mapActions( [ 'GET' => 'option', 'PUT' => 'setting' ] )
+			->addNewButton()
+			->removeMenu();
+		
 		$index = tr_page( $resource, 'index', __( 'List Domain' ), $settings );
 		
-		foreach ( [ $add, $delete, $edit, $index ] as $page ) {
+		foreach ( [ $add, $delete, $edit, $option, $index ] as $page ) {
 			/** @var \TypeRocket\Register\Page $page */
 			$page->useController();
 		}
 		
-		$index->apply( $add, $delete, $edit )
-		      ->addNewButton()
-		      ->setId( 'web_crawler' );
+		$this->crawl_domain = $index->apply( $add, $delete, $edit )
+		                            ->addNewButton()
+		                            ->setId( 'web_crawler' );
 		
 	}
 	
@@ -150,7 +155,7 @@ class Web_Crawler_Admin {
 			$page->useController();
 		}
 		
-		$index->apply( $add, $delete, $edit )->addNewButton();
+		$this->crawl_category = $index->apply( $add, $delete, $edit )->addNewButton();
 	}
 	
 	public function customize_menu_labels() {
