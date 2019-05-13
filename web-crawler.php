@@ -62,6 +62,7 @@ register_deactivation_hook( __FILE__, 'deactivate_web_crawler' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
+require_once plugin_dir_path( __FILE__ ) . 'init.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-web-crawler.php';
 
 /**
@@ -74,9 +75,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-web-crawler.php';
  * @since    1.0.0
  */
 function run_web_crawler() {
-
+	
 	$plugin = new Web_Crawler();
 	$plugin->run();
-
+	
 }
+
 run_web_crawler();
