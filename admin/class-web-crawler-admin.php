@@ -42,16 +42,6 @@ class Web_Crawler_Admin
     private $version;
 
     /**
-     * @var \TypeRocket\Register\Page
-     */
-    private $crawl_domain;
-
-    /**
-     * @var \TypeRocket\Register\Page
-     */
-    private $crawl_category;
-
-    /**
      * Initialize the class and set its properties.
      *
      *
@@ -175,7 +165,7 @@ class Web_Crawler_Admin
             $page->useController()->addNewButton()->removeMenu();
         }
 
-        $this->crawl_category = $index->apply($add, $delete, $edit, $edit_option)->addNewButton();
+        $index->apply($add, $delete, $edit, $edit_option)->addNewButton();
     }
 
     public function customize_menu_labels()

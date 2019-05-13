@@ -117,30 +117,6 @@ class CrawlDomainController extends Controller
     }
 
     /**
-     * The show page for admin
-     *
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function show($id)
-    {
-        // TODO: Implement show() method.
-    }
-
-    /**
-     * The delete page for admin
-     *
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function delete($id)
-    {
-        // TODO: Implement delete() method.
-    }
-
-    /**
      * The option page for admin
      *
      * @param string $id
