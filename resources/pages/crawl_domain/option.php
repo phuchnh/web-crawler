@@ -4,28 +4,22 @@
  * @var $form \TypeRocket\Elements\Form
  */
 
-$select = $form->select( 'Type' )->setOptions( [
-	'Text'  => 'text',
-	'Image' => 'image',
-	'HTML'  => 'html',
-] );
+$select = $form->select('type')->setOptions([
+    'Text'  => 'text',
+    'Image' => 'image',
+    'HTML'  => 'html',
+]);
 
+$select->setLabel('Type');
 
+$repeater = $form->repeater('domain_options')->setFields([
+    $form->text('Selector'),
+    $form->row($form->text('Title'), $select),
+]);
 
-$box = tr_meta_box('Speakers');
-$box->addScreen( 'event' );
-$box->setCallback(function() {
-	$form = tr_form();
-	$repeater = $form->repeater('Speakers')->setFields([
-		$form->image('Photo'),
-		$form->text('Name'),
-		$form->text('Slides URL')
-	]);
-	
-	echo $repeater;
-});
+$repeater->setLabel('Selectors');
 
 echo $form->open();
-echo $box;
-echo $form->submit( 'Update' );
+echo $repeater;
+echo $form->submit('Update');
 echo $form->close();
