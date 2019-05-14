@@ -3,7 +3,6 @@
 /**
  * @var $form \TypeRocket\Elements\Form
  */
-echo $url;
 $select = $form->select('type');
 $select->setOptions(['Text' => 'text', 'Image' => 'image', 'HTML' => 'html']);
 $select->setLabel('Type');

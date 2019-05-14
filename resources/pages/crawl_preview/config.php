@@ -14,6 +14,9 @@ $catogories->setModelOptions(new \App\Models\CrawlCategory, 'category_url', 'id'
 $catogories->setAttribute('class', 'select2');
 
 ?>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
+
 <div class="flex md:flex-row flex-wrap">
   <div class="w-full md:w-2/5 p-4">
       <?php echo $form->open() ?>

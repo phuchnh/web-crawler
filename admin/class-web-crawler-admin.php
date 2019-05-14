@@ -67,11 +67,6 @@ class Web_Crawler_Admin
         );
         
         wp_enqueue_style(
-            'tailwind',
-            'https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css'
-        );
-        
-        wp_enqueue_style(
             $this->plugin_name,
             plugin_dir_url(__FILE__).'css/web-crawler-admin.css',
             [],
