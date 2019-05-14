@@ -33,6 +33,12 @@ class Web_Crawler_Activator {
 		static::create_table_crawl_domains();
 		static::create_table_crawl_categories();
 	}
+
+	private static function activate_crawl_schedule_event() {
+        if ( ! wp_next_scheduled('crawl_schedule_event')) {
+            wp_schedule_event(time(), 'hourly', 'crawl_schedule_event');
+        }
+	}
 	
 	private static function create_table_crawl_categories() {
 		global $wpdb;
