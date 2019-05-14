@@ -4,13 +4,23 @@
 
 $form->useUrl('POST', 'crawler/preview')->useAjax();
 
+//
+$data    = [];
+$options = (new \App\Models\CrawlCategory)->findAll()->get();
+foreach ($options as $option) {
+    $item['id']   = $option->id;
+    $item['text'] = $option->category_url;
+}
+
 $domains = $form->select('domain_id')->setLabel('Domain URL');
 $domains->setModelOptions(new \App\Models\CrawlDomain, 'domain_url', 'id');
 $domains->setAttribute('class', 'select2');
+$domains->setAttribute('id', 'domain');
 
 $catogories = $form->select('category_id')->setLabel('Category URL');
 $catogories->setModelOptions(new \App\Models\CrawlCategory, 'category_url', 'id');
 $catogories->setAttribute('class', 'select2');
+$catogories->setAttribute('id', 'category');
 
 ?>
 
@@ -42,6 +52,13 @@ $catogories->setAttribute('class', 'select2');
     'use strict';
     $(function() {
       var $result = $('#preview_show');
+      var $category = $('#category');
+      var $domain = $('#domain');
+
+      $domain.change(function(e) {
+        e.preventDefault();
+        var value = $(this).val();
+      });
 
       $('#preview_btn').click(function() {
         $result.empty();
