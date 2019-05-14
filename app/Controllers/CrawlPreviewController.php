@@ -4,37 +4,26 @@ namespace App\Controllers;
 
 use App\Models\CrawlPreview;
 use \TypeRocket\Controllers\Controller;
+use TypeRocket\Http\Request;
 
 class CrawlPreviewController extends Controller
 {
-    
     protected $modelClass = CrawlPreview::class;
-    protected $resource = 'options';
+    protected $resource = 'crawl_preview';
     
-    public function config()
+    public function config(Request $request)
     {
-        return tr_view('crawl_preview.config', ['form' => tr_form('crawl_preview', 'hanlde')]);
+        return tr_view('crawl_preview.config', [
+            'form' => tr_form($this->resource, 'handle'),
+        ]);
     }
     
-    public function hanlde()
+    public function handle(Request $request)
     {
-        $options = [
-            'domain_id'   => 'required',
-            'category_id' => 'required',
-        ];
         
-        $validator = tr_validator($options, $this->request->getFields());
+        $this->response->setData('dasd', $request->getFields());
+        $this->response->exitJson(200);
         
-        if ($validator->getErrors()) {
-            $this->response->exitNotFound();
-            
-            return $this->response;
-        }
-        
-        $this->response->setMessage('Cái lề gì thốn');
-        $this->response->withFields($this->request->getFields());
-        
-        return tr_redirect()->toPage($this->resource, 'config')->with($this->request->getFields());
-        
+        return $this->response;
     }
 }

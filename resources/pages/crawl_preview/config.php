@@ -2,8 +2,8 @@
 
 /**@var $form \TypeRocket\Elements\Form */
 
-$form->useJson();
 $form->useUrl('POST', 'crawler/preview');
+$form->useAjax();
 
 $domains = $form->select('domain_id')->setLabel('Domain URL');
 $domains->setModelOptions(new \App\Models\CrawlDomain, 'domain_url', 'id');

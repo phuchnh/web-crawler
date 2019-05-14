@@ -153,7 +153,8 @@ class Web_Crawler_Admin
             'menu'       => 'Crawler preview',
         ];
         tr_page($resource, 'config', __('Crawler preview'), $settings)
-            ->mapActions(['GET' => 'config', 'POST' => 'hanlde'])
+            ->mapAction('GET', 'config')
+            ->mapAction('POST', 'handle')
             ->useController()
             ->setId('crawl_preview')
             ->setIcon('eye');

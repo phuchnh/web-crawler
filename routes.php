@@ -8,4 +8,4 @@
 |
 */
 
-tr_route()->post()->match('crawler/preview')->do([\App\Controllers\CrawlPreviewController::class, 'hanlde']);
+tr_route()->post()->match('crawler/preview')->do([\App\Controllers\CrawlPreviewController::class, 'handle']);

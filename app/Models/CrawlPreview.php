@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use TypeRocket\Models\WPOption;
+use \TypeRocket\Models\Model;
 
-class CrawlPreview extends WPOption
+class CrawlPreview extends Model
 {
+    protected $resource = 'crawl_previews';
 }
