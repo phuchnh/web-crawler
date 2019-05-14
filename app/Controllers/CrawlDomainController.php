@@ -7,10 +7,10 @@ use \TypeRocket\Controllers\Controller;
 
 class CrawlDomainController extends Controller
 {
-
+    
     protected $modelClass = CrawlDomain::class;
     protected $resource = 'crawl_domain';
-
+    
     /**
      * The index page for admin
      *
@@ -20,7 +20,7 @@ class CrawlDomainController extends Controller
     {
         return tr_view('crawl_domain.index');
     }
-
+    
     /**
      * The add page for admin
      *
@@ -29,10 +29,10 @@ class CrawlDomainController extends Controller
     public function add()
     {
         $form = tr_form($this->resource, 'create');
-
+        
         return tr_view('crawl_domain.add', ['form' => $form]);
     }
-
+    
     /**
      * Create item
      *
@@ -43,99 +43,95 @@ class CrawlDomainController extends Controller
      */
     public function create()
     {
-        $request = new \TypeRocket\Http\Request();
-
         $options = [
             'domain_url' => 'required|unique:domain_url:wp_crawl_domains',
         ];
-
-        $validator = tr_validator($options, $request->getFields());
-
+        
+        $validator = tr_validator($options, $this->request->getFields());
+        
         if ($validator->getErrors()) {
             $validator->flashErrors($this->response);
-
+            
             return tr_redirect()->toPage($this->resource, 'add')
-                                ->withFields($request->getFields());
+                                ->withFields($this->request->getFields());
         }
-
+        
         $crawl_domain                 = new CrawlDomain;
         $crawl_domain->domain_url     = $this->request->getFields('domain_url');
         $crawl_domain->domain_options = null;
         $crawl_domain->save();
         $this->response->flashNext('Doamin created!');
-
+        
         return tr_redirect()->toPage($this->resource, 'index');
     }
-
+    
     /**
      * The edit page for admin
      *
-     * @param string $id
+     * @param  string  $id
      *
      * @return mixed
      */
     public function edit($id)
     {
         $form = tr_form($this->resource, 'update', $id);
-
+        
         return tr_view('crawl_domain.edit', ['form' => $form]);
     }
-
+    
     /**
      * Update item
      *
      * AJAX requests and normal requests can be made to this action
      *
-     * @param CrawlDomain $crawl_domain
+     * @param  CrawlDomain  $crawl_domain
      *
      * @return mixed
      * @throws \Exception
      */
     public function update(CrawlDomain $crawl_domain)
     {
-        $request = new \TypeRocket\Http\Request();
-
         $options = [
-            'domain_url' => 'required|unique:domain_url:wp_crawl_domains@id:' . $crawl_domain->id,
+            'domain_url' => 'required|unique:domain_url:wp_crawl_domains@id:'.$crawl_domain->id,
         ];
-
-        $validator = tr_validator($options, $request->getFields());
-
+        
+        $validator = tr_validator($options, $this->request->getFields());
+        
         if ($validator->getErrors()) {
             $validator->flashErrors($this->response);
-
-            return tr_redirect()->toPage($this->resource, 'edit', $crawl_domain->id)
-                                ->withFields($request->getFields());
+            $this->response->withFields($this->request->getFields());
+            
+            return tr_redirect()->toPage($this->resource, 'edit', $crawl_domain->id);
         }
-
+        
         $crawl_domain->domain_url     = $this->request->getFields('domain_url');
         $crawl_domain->domain_options = null;
         $crawl_domain->save();
         $this->response->flashNext('Doamin updated!');
-
+        
         return tr_redirect()->toPage($this->resource, 'index');
     }
-
+    
     /**
      * The option page for admin
      *
-     * @param string $id
+     * @param  string  $id
      *
      * @return mixed
      */
     public function edit_option($id)
     {
         $form = tr_form($this->resource, 'update_option', $id);
-
+        
         return tr_view('crawl_domain.option', ['form' => $form]);
     }
-
+    
     /**
      * The option page for admin
      *
      * AJAX requests and normal requests can be made to this action
      *
-     * @param CrawlDomain $crawl_domain
+     * @param  CrawlDomain  $crawl_domain
      *
      * @return mixed
      * @throws \Exception
@@ -145,27 +141,27 @@ class CrawlDomainController extends Controller
         $crawl_domain->domain_options = $this->request->getFields('domain_options');
         $crawl_domain->save();
         $this->response->flashNext('Setting updated!');
-
+        
         return tr_redirect()->toPage($this->resource, 'edit_option', $crawl_domain->id);
     }
-
+    
     /**
      * Destroy item
      *
      * AJAX requests and normal requests can be made to this action
      *
-     * @param CrawlDomain $crawl_domain
+     * @param  CrawlDomain  $crawl_domain
      *
      * @return mixed
      * @throws \Exception
      */
     public function destroy(CrawlDomain $crawl_domain)
     {
-        if ( ! $success = (boolean)$crawl_domain->delete()) {
+        if ( ! $success = (boolean) $crawl_domain->delete()) {
             return $this->response->flashNext('Doamin deleted failure!', 'error');
         }
         $this->response->flashNext('Doamin deleted!');
-
+        
         return tr_redirect()->toPage($this->resource, 'index');
     }
 }

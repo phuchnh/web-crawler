@@ -3,7 +3,7 @@
 /**
  * @var $form \TypeRocket\Elements\Form
  */
-
+echo $url;
 $select = $form->select('type');
 $select->setOptions(['Text' => 'text', 'Image' => 'image', 'HTML' => 'html']);
 $select->setLabel('Type');
@@ -25,15 +25,14 @@ echo $form->close();
 
 ?>
 
-<script language="JavaScript">
+<script>
   (function($) {
     'use strict';
     $(function() {
       TypeRocket.repeaterCallbacks.push(function($template) {
-        var $select = $template.find('select').select2({width: '100%'});
+        var $select = $template.find('select').select2({ width: '100%' });
 
         // Remove unused element after re-init select2
-        // file ./wp-content/plugins/web-crawler/admin/js/web-crawler-admin.js
         $select.last().next().next().remove();
       });
     });
