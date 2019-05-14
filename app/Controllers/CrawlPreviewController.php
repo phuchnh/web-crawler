@@ -115,6 +115,7 @@ class CrawlPreviewController extends Controller
         } while ($idx < 2);
         
         $this->response->setData('resource', $data);
+        $this->response->setMessage('Success');
         $this->response->exitJson(200);
         
         return $this->response;

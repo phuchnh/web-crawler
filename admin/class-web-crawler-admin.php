@@ -95,6 +95,12 @@ class Web_Crawler_Admin
         );
         
         wp_enqueue_script(
+            'loadingoverlay',
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery-loading-overlay/2.1.6/loadingoverlay.min.js',
+            ['jquery']
+        );
+        
+        wp_enqueue_script(
             '_',
             'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js'
         );
