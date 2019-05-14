@@ -122,7 +122,8 @@ class Web_Crawler_Admin
         $resource = 'crawl_domain';
         $settings = [
             'capability' => 'administrator',
-            'menu'       => 'Web crawler',
+            'menu'       => 'Domain Setting',
+            'position'   => 100,
         ];
         
         $add = tr_page($resource, 'add', __('Add Domain'), $settings)
@@ -146,7 +147,7 @@ class Web_Crawler_Admin
         
         $index->apply($add, $delete, $edit, $edit_option)
               ->addNewButton()
-              ->setId('web_crawler')
+              ->setId('domain_setting')
               ->setIcon('sphere');
         
     }
@@ -157,6 +158,7 @@ class Web_Crawler_Admin
         $settings = [
             'capability' => 'administrator',
             'menu'       => 'Crawler preview',
+            'position'   => 102,
         ];
         tr_page($resource, 'config', __('Crawler preview'), $settings)
             ->mapAction('GET', 'config')
@@ -172,7 +174,8 @@ class Web_Crawler_Admin
         
         $settings = [
             'capability' => 'administrator',
-            'position'   => 999,
+            'menu'       => 'Category Setting',
+            'position'   => 101,
         ];
         
         $add = tr_page($resource, 'add', __('Add Category'), $settings)
@@ -194,7 +197,10 @@ class Web_Crawler_Admin
             $page->useController()->addNewButton()->removeMenu();
         }
         
-        $index->apply($add, $delete, $edit, $edit_option)->addNewButton();
+        $index->apply($add, $delete, $edit, $edit_option)
+              ->addNewButton()
+              ->setId('category_setting')
+              ->setIcon('sphere');
     }
     
     public function customize_menu_labels()
