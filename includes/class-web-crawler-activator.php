@@ -37,7 +37,7 @@ class Web_Crawler_Activator {
 
 	private static function activate_crawl_schedule_event() {
         if ( ! wp_next_scheduled('crawl_schedule_event')) {
-            wp_schedule_event(time(), 'one_minute', 'crawl_schedule_event');
+            wp_schedule_event(time(), 'five_minutes', 'crawl_schedule_event');
         }
 	}
 	

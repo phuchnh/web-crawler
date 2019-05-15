@@ -55,17 +55,17 @@ function deactivate_web_crawler() {
 	Web_Crawler_Deactivator::deactivate();
 }
 
-function add_one_minute_schedules($schedules)
+function add_custom_cron_intervals($schedules)
 {
-    $schedules['one_minute'] = [
-        'interval' => 60 * 1,
-        'display'  => __('One minute'),
+    $schedules['five_minutes'] = [
+        'interval' => 60 * 5,
+        'display'  => __('Once Every 5 Minutes'),
     ];
     
     return $schedules;
 }
 
-add_filter('cron_schedules', 'add_one_minute_schedules');
+add_filter('cron_schedules', 'add_custom_cron_intervals');
 register_activation_hook( __FILE__, 'activate_web_crawler' );
 register_deactivation_hook( __FILE__, 'deactivate_web_crawler' );
 
