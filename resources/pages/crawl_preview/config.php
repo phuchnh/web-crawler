@@ -150,14 +150,33 @@ $catogories->setAttribute('id', 'category');
         });
 
         request.done(function(response) {
-          if (response.data.resource.length > 0) {
-            render(response.data.resource);
+          if (_.isString(response)) {
+            $.LoadingOverlay('hide');
+            return swal('Oops', 'Something went wrong!', 'error');
           }
+          
+          if (response.messageType === 'error') {
+            $.LoadingOverlay('hide');
+            return swal('Oops', response.message, 'error');
+          }
+          
+          if (!response.data.resource) {
+            $.LoadingOverlay('hide');
+            return swal('Oops', 'Resource not found!', 'error');
+          }
+          
+          if (response.data.resource.length > 0) {
+            return render(response.data.resource);
+          }
+
           $.LoadingOverlay('hide');
         });
 
-        request.fail(function() {
+        request.fail(function(response) {
           $.LoadingOverlay('hide');
+          if (response.status === 404) {
+            return swal('Oops', 'Resource not found!', 'error');
+          }
         });
 
       });

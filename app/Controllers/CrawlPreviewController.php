@@ -36,8 +36,8 @@ class CrawlPreviewController extends Controller
         $domain = new CrawlDomain();
         $domain = $domain->findById($this->request->getFields('domain_id'));
         if ($domain === null) {
-            $this->response->flashNext('Domain not found', 'error');
-            $this->response->exitJson();
+            $this->response->setMessage('Domain not found');
+            $this->response->exitNotFound();
             
             return $this->response;
         }
@@ -49,8 +49,8 @@ class CrawlPreviewController extends Controller
          */
         $category = $domain->categories()->findById($this->request->getFields('category_id'));
         if ($category === null) {
-            $this->response->flashNext('Category not found', 'error');
-            $this->response->exitJson();
+            $this->response->setMessage('Category not found');
+            $this->response->exitNotFound();
             
             return $this->response;
         }

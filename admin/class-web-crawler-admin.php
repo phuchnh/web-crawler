@@ -82,10 +82,9 @@ class Web_Crawler_Admin
     public function enqueue_scripts()
     {
         wp_enqueue_script(
-            $this->plugin_name,
-            plugin_dir_url(__FILE__).'js/web-crawler-admin.js',
-            ['jquery'],
-            $this->version
+            'sweetalert',
+            'https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js',
+            ['jquery']
         );
         
         wp_enqueue_script(
@@ -103,6 +102,13 @@ class Web_Crawler_Admin
         wp_enqueue_script(
             '_',
             'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js'
+        );
+    
+        wp_enqueue_script(
+            $this->plugin_name,
+            plugin_dir_url(__FILE__).'js/web-crawler-admin.js',
+            ['jquery'],
+            $this->version
         );
         
     }

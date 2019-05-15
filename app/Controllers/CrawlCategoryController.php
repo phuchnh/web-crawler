@@ -67,7 +67,6 @@ class CrawlCategoryController extends Controller
         $crawl_category                   = new CrawlCategory;
         $crawl_category->crawl_domain_id  = $crawl_domain->id;
         $crawl_category->category_url     = $this->request->getFields('category_url');
-        $crawl_category->category_options = null;
         
         if ( ! $success = (boolean) $crawl_category->save()) {
             $this->response->flashNext('Category create failure', 'error');
@@ -122,7 +121,6 @@ class CrawlCategoryController extends Controller
         }
         
         $crawl_category->category_url     = $this->request->getFields('category_url');
-        $crawl_category->category_options = null;
         $crawl_category->save();
         $this->response->flashNext('Category updated!');
         
