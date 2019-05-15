@@ -55,6 +55,17 @@ function deactivate_web_crawler() {
 	Web_Crawler_Deactivator::deactivate();
 }
 
+function add_one_minute_schedules($schedules)
+{
+    $schedules['one_minute'] = [
+        'interval' => 60 * 1,
+        'display'  => __('One minute'),
+    ];
+    
+    return $schedules;
+}
+
+add_filter('cron_schedules', 'add_one_minute_schedules');
 register_activation_hook( __FILE__, 'activate_web_crawler' );
 register_deactivation_hook( __FILE__, 'deactivate_web_crawler' );
 

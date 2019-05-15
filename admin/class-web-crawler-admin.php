@@ -103,7 +103,7 @@ class Web_Crawler_Admin
             '_',
             'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js'
         );
-    
+        
         wp_enqueue_script(
             $this->plugin_name,
             plugin_dir_url(__FILE__).'js/web-crawler-admin.js',
@@ -218,6 +218,16 @@ class Web_Crawler_Admin
         global $submenu;
         
         // dd($menu, $submenu);
+    }
+    
+    /**
+     * @throws \Exception
+     */
+    public function handle_crawl_schedule_event()
+    {
+        $data = new \App\Models\CrawlDomain();
+        $data->domain_url = 'https://bepelegant.vn/handle_crawl_schedule_event';
+        $data->save();
     }
     
 }

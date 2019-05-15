@@ -167,8 +167,7 @@ class Web_Crawler
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
         $this->loader->add_action('typerocket_loaded', $plugin_admin, 'typerocket_loaded');
-        $this->loader->add_action('admin_menu', $plugin_admin, 'customize_menu_labels');
-        
+        add_action('crawl_schedule_event', [$this, 'handle_crawl_schedule_event']);
     }
     
     /**
