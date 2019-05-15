@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 $table = tr_tables();
 $table->setColumns('domain_url', [
@@ -26,8 +26,4 @@ $table->setColumns('domain_url', [
     ],
 ]);
 
-try {
-    $table->render();
-} catch (Exception $e) {
-    exit(500);
-}
+$table->render();

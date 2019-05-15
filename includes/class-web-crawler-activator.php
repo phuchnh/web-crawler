@@ -76,7 +76,7 @@ class Web_Crawler_Activator
         $sql = "CREATE TABLE IF NOT EXISTS {$crawl_setting_table} (
               id               int(11) UNSIGNED                   NOT NULL AUTO_INCREMENT,
               crawl_domain_id  int(11) UNSIGNED                   NOT NULL,
-              crawl_categories longtext,
+              categories       longtext,
               options          longtext,
               created_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
               updated_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,

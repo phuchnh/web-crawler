@@ -120,6 +120,7 @@ class Web_Crawler_Admin
     {
         $this->add_crawl_domain_menu();
         $this->add_crawl_category_menu();
+        $this->add_crawl_setting_menu();
     }
 
     public function add_crawl_domain_menu()
@@ -189,19 +190,47 @@ class Web_Crawler_Admin
         $edit = tr_page($resource, 'edit', __('Edit Category'), $settings)
             ->mapActions(['GET' => 'edit', 'PUT' => 'update']);
 
-        $edit_option = tr_page($resource, 'edit_option', __('Setting'), $settings)
-            ->mapActions(['GET' => 'edit_option', 'PUT' => 'update_option']);
-
         $index = tr_page($resource, 'index', __('List Category'), $settings);
 
-        foreach ([$add, $delete, $edit, $edit_option, $index] as $page) {
+        foreach ([$add, $delete, $edit, $index] as $page) {
             /** @var \TypeRocket\Register\Page $page */
             $page->useController()->addNewButton()->removeMenu();
         }
 
-        $index->apply($add, $delete, $edit, $edit_option)
+        $index->apply($add, $delete, $edit)
               ->addNewButton()
               ->setId('category_setting')
+              ->setIcon('sphere');
+    }
+
+    public function add_crawl_setting_menu(){
+        $resource = 'crawl_setting';
+
+        $settings = [
+            'capability' => 'administrator',
+            'menu'       => 'Crawler Setting',
+            'position'   => 103,
+        ];
+
+        $add = tr_page($resource, 'add', __('Add Setting'), $settings)
+            ->mapActions(['GET' => 'add', 'POST' => 'create']);
+
+        $delete = tr_page($resource, 'delete', __('Delete Setting'), $settings)
+            ->mapActions(['GET' => 'delete', 'DELETE' => 'destroy']);
+
+        $edit = tr_page($resource, 'edit', __('Edit Setting'), $settings)
+            ->mapActions(['GET' => 'edit', 'PUT' => 'update']);
+
+        $index = tr_page($resource, 'index', __('List Setting'), $settings);
+
+        foreach ([$add, $delete, $edit, $index] as $page) {
+            /** @var \TypeRocket\Register\Page $page */
+            $page->useController()->addNewButton()->removeMenu();
+        }
+
+        $index->apply($add, $delete, $edit)
+              ->addNewButton()
+              ->setId('crawl_setting')
               ->setIcon('sphere');
     }
 
