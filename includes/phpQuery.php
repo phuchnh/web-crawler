@@ -2517,32 +2517,32 @@ class phpQueryObject
                 } elseif (mb_strlen($param) > 1 && $param{1} == 'n') // an+b
                 {
                     $mapped = $this->map(
-                        create_function('$node, $param',
-                            '$prevs = pq($node)->prevAll()->size();
-							$index = 1+$prevs;
-							$b = mb_strlen($param) > 3
-								? $param{3}
-								: 0;
-							$a = $param{0};
-							if ($b && $param{2} == "-")
-								$b = -$b;
-							if ($a > 0) {
-								return ($index-$b)%$a == 0
-									? $node
-									: null;
-								phpQuery::debug($a."*".floor($index/$a)."+$b-1 == ".($a*floor($index/$a)+$b-1)." ?= $prevs");
-								return $a*floor($index/$a)+$b-1 == $prevs
-										? $node
-										: null;
-							} else if ($a == 0)
-								return $index == $b
-										? $node
-										: null;
-							else
-								// negative value
-								return $index <= $b
-										? $node
-										: null;
+                        function ($node,$param){
+                            $prevs = pq($node)->prevAll()->size();
+                            $index = 1+$prevs;
+                            $b = mb_strlen($param) > 3
+                                ? $param{3}
+                                : 0;
+                            $a = $param{0};
+                            if ($b && $param{2} == "-")
+                                $b = -$b;
+                            if ($a > 0) {
+                                return ($index-$b)%$a == 0
+                                    ? $node
+                                    : null;
+                                phpQuery::debug($a."*".floor($index/$a)."+$b-1 == ".($a*floor($index/$a)+$b-1)." ?= $prevs");
+                                return $a*floor($index/$a)+$b-1 == $prevs
+                                    ? $node
+                                    : null;
+                            } else if ($a == 0)
+                                return $index == $b
+                                    ? $node
+                                    : null;
+                            else
+                                // negative value
+                                return $index <= $b
+                                    ? $node
+                                    : null;
 //							if (! $b)
 //								return $index%$a == 0
 //									? $node
@@ -2551,20 +2551,21 @@ class phpQueryObject
 //								return ($index-$b)%$a == 0
 //									? $node
 //									: null;
-							'),
+                        },
                         new CallbackParam(), $param
                     );
                 } else // index
                 {
                     $mapped = $this->map(
-                        create_function('$node, $index',
-                            '$prevs = pq($node)->prevAll()->size();
-							if ($prevs && $prevs == $index-1)
-								return $node;
-							else if (! $prevs && $index == 1)
-								return $node;
-							else
-								return null;'),
+                        function ($node, $index){
+                            $prevs = pq($node)->prevAll()->size();
+                            if ($prevs && $prevs == $index-1)
+                                return $node;
+                            else if (! $prevs && $index == 1)
+                                return $node;
+                            else
+                                return null;
+                        },
                         new CallbackParam(), $param
                     );
                 }
@@ -5609,15 +5610,15 @@ abstract class phpQuery
             while (preg_match($regex, $content)) {
                 $content = preg_replace_callback(
                     $regex,
-                    create_function('$m',
-                        'return $m[1].$m[2].$m[3]."<?php "
-							.str_replace(
-								array("%20", "%3E", "%09", "&#10;", "&#9;", "%7B", "%24", "%7D", "%22", "%5B", "%5D"),
-								array(" ", ">", "	", "\n", "	", "{", "$", "}", \'"\', "[", "]"),
-								htmlspecialchars_decode($m[4])
-							)
-							." ?>".$m[5].$m[2];'
-                    ),
+                    function ($m){
+                        return $m[1].$m[2].$m[3]."<?php "
+                               .str_replace(
+                                   array("%20", "%3E", "%09", "&#10;", "&#9;", "%7B", "%24", "%7D", "%22", "%5B", "%5D"),
+                                   array(" ", ">", "	", "\n", "	", "{", "$", "}", '"', "[", "]"),
+                                   htmlspecialchars_decode($m[4])
+                               )
+                               ." ?>".$m[5].$m[2];
+                    },
                     $content
                 );
             }
