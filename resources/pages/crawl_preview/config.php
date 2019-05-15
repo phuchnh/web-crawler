@@ -5,7 +5,7 @@
 $form->useUrl('POST', 'crawler/preview');
 
 $crawl_categories = [];
-$options          = (new \App\Models\CrawlCategory)->findAll()->get();
+$options          = (new \App\Models\CrawlCategory)->findAll()->get() ?? [];
 foreach ($options as $option) {
     $item['id']              = $option->id;
     $item['text']            = $option->category_url;
