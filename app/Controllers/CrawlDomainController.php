@@ -43,27 +43,28 @@ class CrawlDomainController extends Controller
      */
     public function create()
     {
-        $fields = $this->request->getFields();
-        
         $options = [
             'domain_url' => 'required|unique:domain_url:wp_crawl_domains',
         ];
         
-        $validator = tr_validator($options, $fields);
+        $validator = tr_validator($options, $this->request->getFields());
         
         if ($validator->getErrors()) {
             $validator->flashErrors($this->response);
             
-            return tr_redirect()->toPage($this->resource, 'add')->withFields($fields);
+            return tr_redirect()->toPage($this->resource, 'add')->withFields($this->request->getFields());
         }
         
         $crawl_domain             = new CrawlDomain;
-        $crawl_domain->domain_url = $fields['domain_url'];
+        $crawl_domain->domain_url = $this->request->getFields('domain_url');
+        $crawl_domain->archive_options = null;
+        $crawl_domain->single_options = null;
         
         if ( ! $success = (boolean)$crawl_domain->save()) {
             $this->response->flashNext('Failure!', 'error');
             
-            return tr_redirect()->toPage($this->resource, 'add')->withFields($fields);
+            return tr_redirect()->toPage($this->resource, 'add')
+                                ->withFields($this->request->getFields());
         }
         $this->response->flashNext('Success!');
         

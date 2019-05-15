@@ -32,7 +32,7 @@ class Web_Crawler_Activator {
 	public static function activate() {
 		static::create_table_crawl_domains();
 		static::create_table_crawl_categories();
-		// static::activate_crawl_schedule_event();
+		static::activate_crawl_schedule_event();
 	}
 
 	private static function activate_crawl_schedule_event() {

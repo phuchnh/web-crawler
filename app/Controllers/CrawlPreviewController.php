@@ -59,7 +59,7 @@ class CrawlPreviewController extends Controller
         phpQuery::newDocumentFileHTML($category->category_url);
         
         // Get categories links
-        $link_selector = $category->category_options['selector'];
+        $link_selector = $domain->archive_options['selector'];
         
         $links = pq($link_selector)->map(function (\DOMElement $element) {
             return $this->link($element->getAttribute('href'));
@@ -78,7 +78,7 @@ class CrawlPreviewController extends Controller
             }
             
             $item = [];
-            foreach ($domain->domain_options as $option) {
+            foreach ($domain->single_options as $option) {
                 $value       = null;
                 $key         = $option['title'];
                 $type        = $option['type'];
