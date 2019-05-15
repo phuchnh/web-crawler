@@ -32,6 +32,7 @@ class Web_Crawler_Activator {
 	public static function activate() {
 		static::create_table_crawl_domains();
 		static::create_table_crawl_categories();
+		// static::activate_crawl_schedule_event();
 	}
 
 	private static function activate_crawl_schedule_event() {
@@ -50,7 +51,6 @@ class Web_Crawler_Activator {
             id               int(11) UNSIGNED                   NOT NULL AUTO_INCREMENT,
 		    crawl_domain_id  int(11) UNSIGNED                   NOT NULL,
 		    category_url     VARCHAR(191)                       NOT NULL,
-		    category_options longtext,
 		    created_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		    updated_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
 		    PRIMARY KEY (id),
@@ -67,11 +67,12 @@ class Web_Crawler_Activator {
 		$charset_collate = $wpdb->get_charset_collate();
 		$crawl_domains   = $wpdb->prefix . 'crawl_domains';
 		$sql             = "CREATE TABLE IF NOT EXISTS {$crawl_domains} (
-            id             int(11) UNSIGNED                   NOT NULL AUTO_INCREMENT,
-		    domain_url     VARCHAR(191)                       NOT NULL,
-		    domain_options longtext,
-		    created_at     datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
-		    updated_at     datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+            id                  int(11) UNSIGNED                   NOT NULL AUTO_INCREMENT,
+		    domain_url          VARCHAR(191)                       NOT NULL,
+		    archive_options     longtext,
+		    single_options      longtext,
+		    created_at          datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+		    updated_at          datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
 		    PRIMARY KEY (id),
 		    CONSTRAINT unique_domain_url UNIQUE (domain_url)
         ) {$charset_collate};";

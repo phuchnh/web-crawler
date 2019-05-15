@@ -3,21 +3,23 @@
 /**
  * @var $form \TypeRocket\Elements\Form
  */
+$form->useOld();
+
 $select = $form->select('type');
 $select->setOptions(['Text' => 'text', 'Image' => 'image', 'HTML' => 'html']);
 $select->setLabel('Type');
 $select->setAttribute('class', 'select2');
 
-$repeater = $form->repeater('domain_options');
+$repeater = $form->repeater('single_options');
 $repeater->setFields([
-    $form->row($form->text('Title'), $select),
-    $form->text('Selector'),
+    $form->row($form->text('title')->setLabel('Title'), $select),
+    $form->text('selector')->setLabel('Selector'),
 ]);
 
 $repeater->setLabel('Options');
 
 echo $form->open();
-echo $form->text('domain_url')->setLabel('Domain URL')->setAttribute('disabled', 'disabled');
+echo $form->text('domain_url')->setLabel('Domain URL')->setAttribute('readonly', 'readonly');
 echo $repeater;
 echo $form->submit('Update');
 echo $form->close();
@@ -37,3 +39,4 @@ echo $form->close();
     });
   })(jQuery);
 </script>
+

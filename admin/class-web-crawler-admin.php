@@ -135,17 +135,20 @@ class Web_Crawler_Admin
         $edit = tr_page($resource, 'edit', __('Edit Domain'), $settings)
             ->mapActions(['GET' => 'edit', 'PUT' => 'update']);
         
-        $edit_option = tr_page($resource, 'edit_option', __('Setting'), $settings)
-            ->mapActions(['GET' => 'edit_option', 'PUT' => 'update_option']);
+        $archive = tr_page($resource, 'archive', __('Archive Options'), $settings)
+            ->mapActions(['GET' => 'archive', 'PUT' => 'update']);
+        
+        $single = tr_page($resource, 'single', __('Single Options'), $settings)
+            ->mapActions(['GET' => 'single', 'PUT' => 'update']);
         
         $index = tr_page($resource, 'index', __('List Domain'), $settings);
         
-        foreach ([$add, $delete, $edit, $edit_option, $index] as $page) {
+        foreach ([$add, $delete, $edit, $archive, $single, $index] as $page) {
             /** @var \TypeRocket\Register\Page $page */
             $page->useController()->removeMenu()->addNewButton();
         }
         
-        $index->apply($add, $delete, $edit, $edit_option)
+        $index->apply($add, $delete, $edit, $archive, $single)
               ->addNewButton()
               ->setId('domain_setting')
               ->setIcon('sphere');
