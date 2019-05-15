@@ -22,7 +22,7 @@
  */
 class Web_Crawler_Admin
 {
-    
+
     /**
      * The ID of this plugin.
      *
@@ -31,7 +31,7 @@ class Web_Crawler_Admin
      * @var      string $plugin_name The ID of this plugin.
      */
     private $plugin_name;
-    
+
     /**
      * The version of this plugin.
      *
@@ -40,20 +40,20 @@ class Web_Crawler_Admin
      * @var      string $version The current version of this plugin.
      */
     private $version;
-    
+
     /**
      * Initialize the class and set its properties.
      *
      *
-     * @param  string  $plugin_name  The name of this plugin.
-     * @param  string  $version  The version of this plugin.
+     * @param  string $plugin_name The name of this plugin.
+     * @param  string $version The version of this plugin.
      */
     public function __construct($plugin_name, $version)
     {
         $this->plugin_name = $plugin_name;
         $this->version     = $version;
     }
-    
+
     /**
      * Register the stylesheets for the admin area.
      *
@@ -65,15 +65,15 @@ class Web_Crawler_Admin
             'select2',
             'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.css'
         );
-        
+
         wp_enqueue_style(
             $this->plugin_name,
-            plugin_dir_url(__FILE__).'css/web-crawler-admin.css',
+            plugin_dir_url(__FILE__) . 'css/web-crawler-admin.css',
             [],
             $this->version
         );
     }
-    
+
     /**
      * Register the JavaScript for the admin area.
      *
@@ -86,33 +86,33 @@ class Web_Crawler_Admin
             'https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js',
             ['jquery']
         );
-        
+
         wp_enqueue_script(
             'select2',
             'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js',
             ['jquery']
         );
-        
+
         wp_enqueue_script(
             'loadingoverlay',
             'https://cdnjs.cloudflare.com/ajax/libs/jquery-loading-overlay/2.1.6/loadingoverlay.min.js',
             ['jquery']
         );
-        
+
         wp_enqueue_script(
             '_',
             'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js'
         );
-        
+
         wp_enqueue_script(
             $this->plugin_name,
-            plugin_dir_url(__FILE__).'js/web-crawler-admin.js',
+            plugin_dir_url(__FILE__) . 'js/web-crawler-admin.js',
             ['jquery'],
             $this->version
         );
-        
+
     }
-    
+
     /**
      * Register functions of Typerocket
      */
@@ -120,9 +120,8 @@ class Web_Crawler_Admin
     {
         $this->add_crawl_domain_menu();
         $this->add_crawl_category_menu();
-        $this->add_preview_menu();
     }
-    
+
     public function add_crawl_domain_menu()
     {
         $resource = 'crawl_domain';
@@ -131,103 +130,97 @@ class Web_Crawler_Admin
             'menu'       => 'Domain Setting',
             'position'   => 100,
         ];
-        
+
+        $preview = tr_page('crawl_preview', 'config', __('Crawler preview'), [
+            'capability' => 'administrator',
+            'menu'       => 'Crawler preview',
+            'position'   => 102,
+        ])
+            ->mapAction('GET', 'config')
+            ->mapAction('POST', 'handle')
+            ->useController()
+            ->setId('crawl_preview');
+
         $add = tr_page($resource, 'add', __('Add Domain'), $settings)
             ->mapActions(['GET' => 'add', 'POST' => 'create']);
-        
+
         $delete = tr_page($resource, 'delete', __('Delete Domain'), $settings)
             ->mapActions(['GET' => 'delete', 'DELETE' => 'destroy']);
-        
+
         $edit = tr_page($resource, 'edit', __('Edit Domain'), $settings)
             ->mapActions(['GET' => 'edit', 'PUT' => 'update']);
-        
+
         $archive = tr_page($resource, 'archive', __('Archive Options'), $settings)
             ->mapActions(['GET' => 'archive', 'PUT' => 'update']);
-        
+
         $single = tr_page($resource, 'single', __('Single Options'), $settings)
             ->mapActions(['GET' => 'single', 'PUT' => 'update']);
-        
+
         $index = tr_page($resource, 'index', __('List Domain'), $settings);
-        
+
         foreach ([$add, $delete, $edit, $archive, $single, $index] as $page) {
             /** @var \TypeRocket\Register\Page $page */
             $page->useController()->removeMenu()->addNewButton();
         }
-        
-        $index->apply($add, $delete, $edit, $archive, $single)
+
+        $index->apply($add, $delete, $edit, $archive, $single, $preview)
               ->addNewButton()
               ->setId('domain_setting')
               ->setIcon('sphere');
-        
+
     }
-    
-    public function add_preview_menu()
-    {
-        $resource = 'crawl_preview';
-        $settings = [
-            'capability' => 'administrator',
-            'menu'       => 'Crawler preview',
-            'position'   => 102,
-        ];
-        tr_page($resource, 'config', __('Crawler preview'), $settings)
-            ->mapAction('GET', 'config')
-            ->mapAction('POST', 'handle')
-            ->useController()
-            ->setId('crawl_preview')
-            ->setIcon('eye');
-    }
-    
+
     public function add_crawl_category_menu()
     {
         $resource = 'crawl_category';
-        
+
         $settings = [
             'capability' => 'administrator',
             'menu'       => 'Category Setting',
             'position'   => 101,
         ];
-        
+
         $add = tr_page($resource, 'add', __('Add Category'), $settings)
             ->mapActions(['GET' => 'add', 'POST' => 'create']);
-        
+
         $delete = tr_page($resource, 'delete', __('Delete Category'), $settings)
             ->mapActions(['GET' => 'delete', 'DELETE' => 'destroy']);
-        
+
         $edit = tr_page($resource, 'edit', __('Edit Category'), $settings)
             ->mapActions(['GET' => 'edit', 'PUT' => 'update']);
-        
+
         $edit_option = tr_page($resource, 'edit_option', __('Setting'), $settings)
             ->mapActions(['GET' => 'edit_option', 'PUT' => 'update_option']);
-        
+
         $index = tr_page($resource, 'index', __('List Category'), $settings);
-        
+
         foreach ([$add, $delete, $edit, $edit_option, $index] as $page) {
             /** @var \TypeRocket\Register\Page $page */
             $page->useController()->addNewButton()->removeMenu();
         }
-        
+
         $index->apply($add, $delete, $edit, $edit_option)
               ->addNewButton()
               ->setId('category_setting')
               ->setIcon('sphere');
     }
-    
+
     public function customize_menu_labels()
     {
         global $menu;
         global $submenu;
-        
+
         // dd($menu, $submenu);
     }
-    
+
     /**
      * @throws \Exception
      */
     public function handle_crawl_schedule_event()
     {
-        $data = new \App\Models\CrawlDomain();
+        $data             = new \App\Models\CrawlDomain();
         $data->domain_url = 'https://bepelegant.vn/handle_crawl_schedule_event';
         $data->save();
     }
-    
+
 }

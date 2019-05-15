@@ -22,5 +22,7 @@ return [
     | framework see http://symfony.com/doc/current/console.html
     |
     */
-    'commands' => []
+    'commands' => [
+        \App\Commands\CrawlData::class
+    ]
 ];
