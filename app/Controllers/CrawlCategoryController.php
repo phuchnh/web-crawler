@@ -63,6 +63,13 @@ class CrawlCategoryController extends Controller
         
         $crawl_domain = new CrawlDomain;
         $crawl_domain->findById($this->request->getFields('crawl_domain_id'));
+    
+        if ( ! $crawl_domain) {
+            $this->response->flashNext('Domain not found', 'error');
+            $this->response->withFields($this->request->getFields());
+        
+            return tr_redirect()->toPage($this->resource, 'add');
+        }
         
         $crawl_category                   = new CrawlCategory;
         $crawl_category->crawl_domain_id  = $crawl_domain->id;
@@ -119,8 +126,18 @@ class CrawlCategoryController extends Controller
             return tr_redirect()->toPage($this->resource, 'edit', $crawl_category->id)
                                 ->withFields($this->request->getFields());
         }
+        $crawl_domain = new CrawlDomain;
+        $crawl_domain->findById($this->request->getFields('crawl_domain_id'));
+    
+        if ( ! $crawl_domain) {
+            $this->response->flashNext('Domain not found', 'error');
+            $this->response->withFields($this->request->getFields());
+    
+            return tr_redirect()->toPage($this->resource, 'edit', $crawl_category->id);
+        }
         
-        $crawl_category->category_url     = $this->request->getFields('category_url');
+        $crawl_category->category_url    = $this->request->getFields('category_url');
+        $crawl_category->crawl_domain_id = $crawl_domain->id;
         $crawl_category->save();
         $this->response->flashNext('Category updated!');
         
