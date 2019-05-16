@@ -40,12 +40,14 @@ class CrawlData extends Command
         do {
             $url              = array_get($categorySettings[$index], 'category_url');
             $selector         = array_get($categorySettings[$index], 'selector');
+            $single_options       = array_get($categorySettings[$index], 'single_options');
             $this->domain_url = array_get($categorySettings[$index], 'domain_url');
             phpQuery::newDocumentFileHTML($url);
             
-            $links = pq($selector)->map(function (\DOMElement $element) {
-                return sprintf('("%s", NULL)',
-                    $this->link($element->getAttribute('href'))
+            $links = pq($selector)->map(function (\DOMElement $element) use ($single_options) {
+                return sprintf("('%s', '%s')",
+                    $this->link($element->getAttribute('href')),
+                    esc_sql($single_options)
                 );
             });
             
@@ -75,10 +77,10 @@ class CrawlData extends Command
             $needle   = $value['crawl_domain_id'];
             $matched  = array_search($needle, $haystack);
             if ($matched > -1) {
-                $value['selector']   = array_get($categorySelectors[$matched], 'archive_options.selector');
-                $value['selector']   = array_get($categorySelectors[$matched], 'archive_options.selector');
-                $value['domain_url'] = array_get($categorySelectors[$matched], 'domain_url');
-                $result[]            = $value;
+                $value['selector']       = array_get($categorySelectors[$matched], 'archive_options.selector');
+                $value['single_options'] = array_get($categorySelectors[$matched], 'single_options');
+                $value['domain_url']     = array_get($categorySelectors[$matched], 'domain_url');
+                $result[]                = $value;
             }
         }
         
@@ -92,12 +94,16 @@ class CrawlData extends Command
     protected function getCategorySelectors()
     {
         $result  = [];
-        $domains = (new \App\Models\CrawlDomain())->findAll()->select('id', 'archive_options', 'domain_url')->get();
+        $domains = (new \App\Models\CrawlDomain())
+            ->findAll()
+            ->select('id', 'archive_options', 'single_options', 'domain_url')
+            ->get();
         
         foreach ((array)$domains as $domain) {
             $value['id']              = $domain->id;
             $value['domain_url']      = $domain->domain_url;
             $value['archive_options'] = $domain->archive_options;
+            $value['single_options']  = array_get($domain->getPropertiesUnaltered(), 'single_options');
             $result[]                 = $value;
         }
         
@@ -135,7 +141,7 @@ class CrawlData extends Command
     {
         global $wpdb;
         $crawl_link_table = $wpdb->prefix.'crawl_links';
-        $sql              = "INSERT INTO {$crawl_link_table} (link, options) VALUES ".implode(',', $links).";";
+        $sql              = "INSERT INTO {$crawl_link_table} (`link`, `options`) VALUES ".implode(',', $links).";";
         require_once ABSPATH.'wp-admin/includes/upgrade.php';
         dbDelta($sql);
     }
