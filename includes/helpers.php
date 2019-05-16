@@ -127,6 +127,7 @@ if ( ! function_exists('data_get')) {
                 return value($default);
             }
         }
+
         return $target;
     }
 }
