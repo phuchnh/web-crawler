@@ -5,9 +5,6 @@ namespace App\Commands;
 libxml_use_internal_errors(true);
 
 use phpQuery;
-use App\Models\CrawlCategory;
-use App\Models\CrawlDomain;
-use App\Models\CrawlSetting;
 use \TypeRocket\Console\Command;
 
 class CrawlData extends Command
@@ -92,7 +89,7 @@ class CrawlData extends Command
     protected function getCategorySelectors()
     {
         $result  = [];
-        $domains = (new CrawlDomain)->findAll()->select('id', 'archive_options', 'domain_url')->get();
+        $domains = (new \App\Models\CrawlDomain())->findAll()->select('id', 'archive_options', 'domain_url')->get();
         
         foreach ((array)$domains as $domain) {
             $value['id']              = $domain->id;
@@ -113,9 +110,9 @@ class CrawlData extends Command
     protected function getCategoryUrls(array $categoryIds = [])
     {
         $result     = [];
-        $categories = (new CrawlCategory)->where('id', 'IN', $categoryIds)
-                                         ->select('crawl_domain_id', 'category_url')
-                                         ->get();
+        $categories = (new \App\Models\CrawlCategory())->where('id', 'IN', $categoryIds)
+                                                       ->select('crawl_domain_id', 'category_url')
+                                                       ->get();
         
         foreach ($categories as $category) {
             $value['crawl_domain_id'] = $category->crawl_domain_id;
@@ -148,7 +145,7 @@ class CrawlData extends Command
     protected function getCategoryIds()
     {
         // Get crawl settings
-        $settings = new CrawlSetting;
+        $settings = new \App\Models\CrawlSetting();
         $settings = $settings->findAll()->select('categories')->get();
         
         // Get categories url
