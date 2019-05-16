@@ -76,6 +76,7 @@ class CrawlData extends Command
             $matched  = array_search($needle, $haystack);
             if ($matched > -1) {
                 $value['selector']   = array_get($categorySelectors[$matched], 'archive_options.selector');
+                $value['selector']   = array_get($categorySelectors[$matched], 'archive_options.selector');
                 $value['domain_url'] = array_get($categorySelectors[$matched], 'domain_url');
                 $result[]            = $value;
             }
@@ -166,7 +167,7 @@ class CrawlData extends Command
      */
     private function link(string $url)
     {
-        if ($this->is_full_url($url)) {
+        if (preg_match('/^(https?:\/\/).*$/i', $url) > 0) {
             return $url;
         }
         
@@ -174,17 +175,5 @@ class CrawlData extends Command
         $host   = parse_url($this->domain_url, PHP_URL_HOST);
         
         return sprintf('%s://%s/%s', $scheme, $host, trim($url, '/'));
-    }
-    
-    /**
-     * Category url must be contains domain
-     *
-     * @param $url string
-     *
-     * @return boolean
-     */
-    private function is_full_url($url)
-    {
-        return preg_match('/^(https?:\/\/).*$/i', $url) > 0;
     }
 }
