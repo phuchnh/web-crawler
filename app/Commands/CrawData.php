@@ -98,7 +98,7 @@ class CrawData extends Command
             $result[] = $item;
 
             // Update table wp_crawl_links after get data
-            $ids = $model->id;
+            $ids[] = $model->id;
 
             // Next loop
             $index++;
@@ -127,10 +127,10 @@ class CrawData extends Command
 
     private function putCSV($headers, $rows)
     {
-        $output = fopen(WP_CONTENT_DIR . '/crawl.csv', 'wb');
+        $output = fopen(WP_CONTENT_DIR . '/crawl.csv', 'ab');
 
         $data = fgetcsv($output);
-        if ( !$data) {
+        if ( ! $data) {
             fputcsv($output, $headers);
         }
 
