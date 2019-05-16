@@ -10,12 +10,12 @@ class CrawlSetting extends Model
      * @var string
      */
     protected $resource = 'crawl_settings';
-
+    
     /**
      * @var string
      */
     protected $table = 'wp_crawl_settings';
-
+    
     /**
      * @var array
      */
@@ -24,7 +24,7 @@ class CrawlSetting extends Model
         'categories',
         'options',
     ];
-
+    
     /**
      * @var array
      */
@@ -33,7 +33,16 @@ class CrawlSetting extends Model
         'categories'      => 'array',
         'options'         => 'array',
     ];
-
+    
+    protected $format = [
+        'categories' => 'static::unique_array',
+    ];
+    
+    public static function unique_array($value)
+    {
+        return array_unique($value, SORT_REGULAR);
+    }
+    
     /**
      * @return CrawlSetting|null
      */
