@@ -129,6 +129,11 @@ class Web_Crawler
          * The class responsible for get dom from html
          */
         require_once plugin_dir_path(dirname(__FILE__)).'includes/phpQuery.php';
+    
+        /**
+         * Helper functions
+         */
+        require_once plugin_dir_path(dirname(__FILE__)).'includes/helpers.php';
         
         $this->loader = new Web_Crawler_Loader();
         
