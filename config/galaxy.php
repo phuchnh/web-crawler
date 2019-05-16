@@ -11,7 +11,7 @@ return [
     | Example of root installation: TR_PATH . '/wordpress'
     |
     */
-    'wordpress' => false,
+    'wordpress' => TR_PATH . '/wordpress',
 
     /*
     |--------------------------------------------------------------------------
@@ -23,6 +23,6 @@ return [
     |
     */
     'commands' => [
-        \App\Commands\CrawlData::class
+        \App\Commands\CrawlLink::class,
     ]
 ];

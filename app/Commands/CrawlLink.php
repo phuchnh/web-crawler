@@ -8,7 +8,7 @@ libxml_use_internal_errors(true);
 use phpQuery;
 use \TypeRocket\Console\Command;
 
-class CrawlData extends Command
+class CrawlLink extends Command
 {
     /**
      * @var string
@@ -16,7 +16,7 @@ class CrawlData extends Command
     protected $domain_url;
 
     protected $command = [
-        'app:crawl',
+        'app:craw-link',
         'Short description here',
         'Longer help text goes here.',
     ];
