@@ -44,7 +44,9 @@ class CrawlData extends Command
             phpQuery::newDocumentFileHTML($url);
             
             $links = pq($selector)->map(function (\DOMElement $element) {
-                return sprintf('("%s", NULL)', $this->link($element->getAttribute('href')));
+                return sprintf('("%s", NULL)',
+                    $this->link($element->getAttribute('href'))
+                );
             });
             
             $links = $links->elements;
