@@ -23,3 +23,7 @@ div.typerocket-container .select2-container--default .select2-selection__rendere
 div.typerocket-container .select2-container--default .select2-selection__arrow {
     padding-top: 5px;
 }
+
+div.tr-repeater-group .repeater-inputs {
+    min-height: 100px;
+}
