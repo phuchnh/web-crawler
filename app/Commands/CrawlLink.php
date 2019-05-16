@@ -43,14 +43,22 @@ class CrawlLink extends Command
             $selector         = array_get($categorySettings[$index], 'selector');
             $single_options   = array_get($categorySettings[$index], 'single_options');
             $this->domain_url = array_get($categorySettings[$index], 'domain_url');
-            phpQuery::newDocumentFileHTML($url);
+            $html             = phpQuery::newDocumentFileHTML($url);
 
-            $links = pq($selector)->map(function (\DOMElement $element) use ($single_options) {
-                return sprintf("('%s', '%s')",
-                    $this->link($element->getAttribute('href')),
-                    esc_sql($single_options)
-                );
-            });
+            if ( ! $html) {
+                continue;
+            }
+
+            try {
+                $links = pq($selector)->map(function (\DOMElement $element) use ($single_options) {
+                    return sprintf("('%s', '%s')",
+                        $this->link($element->getAttribute('href')),
+                        esc_sql($single_options)
+                    );
+                });
+            } catch (\Exception $exception) {
+                continue;
+            }
 
             $links = $links->elements;
 
