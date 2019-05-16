@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+libxml_use_internal_errors(true);
+
+use phpQuery;
 use App\Models\CrawlCategory;
 use App\Models\CrawlDomain;
 use App\Models\CrawlSetting;
@@ -9,6 +12,10 @@ use \TypeRocket\Console\Command;
 
 class CrawlData extends Command
 {
+    /**
+     * @var string
+     */
+    protected $domain_url;
     
     protected $command = [
         'app:crawl',
@@ -32,7 +39,24 @@ class CrawlData extends Command
         $categorySelectors = $this->getCategorySelectors();
         $categorySettings  = $this->mapSelectors($categoryUrls, $categorySelectors);
         
-        dd($categorySettings);
+        $index = 0;
+        do {
+            $url              = array_get($categorySettings[$index], 'category_url');
+            $selector         = array_get($categorySettings[$index], 'selector');
+            $this->domain_url = array_get($categorySettings[$index], 'domain_url');
+            phpQuery::newDocumentFileHTML($url);
+            
+            $links = pq($selector)->map(function (\DOMElement $element) {
+                return sprintf('("%s", NULL)', $this->link($element->getAttribute('href')));
+            });
+            
+            $links = $links->elements;
+            
+            $this->createMany($links);
+            
+            // Next
+            $index++;
+        } while ($index < count($categorySettings));
         
         // When command executes
         $this->success('Execute!');
@@ -52,8 +76,9 @@ class CrawlData extends Command
             $needle   = $value['crawl_domain_id'];
             $matched  = array_search($needle, $haystack);
             if ($matched > -1) {
-                $value['selector'] = array_get($categorySelectors[$matched], 'archive_options.selector');
-                $result[]          = $value;
+                $value['selector']   = array_get($categorySelectors[$matched], 'archive_options.selector');
+                $value['domain_url'] = array_get($categorySelectors[$matched], 'domain_url');
+                $result[]            = $value;
             }
         }
         
@@ -67,10 +92,11 @@ class CrawlData extends Command
     protected function getCategorySelectors()
     {
         $result  = [];
-        $domains = (new CrawlDomain)->findAll()->select('id', 'archive_options')->get();
+        $domains = (new CrawlDomain)->findAll()->select('id', 'archive_options', 'domain_url')->get();
         
         foreach ((array)$domains as $domain) {
             $value['id']              = $domain->id;
+            $value['domain_url']      = $domain->domain_url;
             $value['archive_options'] = $domain->archive_options;
             $result[]                 = $value;
         }
@@ -100,6 +126,20 @@ class CrawlData extends Command
         return $result;
     }
     
+    /**
+     * Insert multiple row
+     *
+     * @param  array  $links
+     */
+    protected function createMany(array $links)
+    {
+        global $wpdb;
+        $crawl_link_table = $wpdb->prefix.'crawl_links';
+        $sql              = "INSERT INTO {$crawl_link_table} (link, options) VALUES ".implode(',', $links).";";
+        require_once ABSPATH.'wp-admin/includes/upgrade.php';
+        dbDelta($sql);
+    }
+    
     
     /**
      * @return array
@@ -108,7 +148,7 @@ class CrawlData extends Command
     protected function getCategoryIds()
     {
         // Get crawl settings
-        $settings = new CrawlSetting();
+        $settings = new CrawlSetting;
         $settings = $settings->findAll()->select('categories')->get();
         
         // Get categories url
@@ -118,5 +158,34 @@ class CrawlData extends Command
         }
         
         return array_flatten($categoru_urls);
+    }
+    
+    /**
+     * @param $url string
+     *
+     * @return string
+     */
+    private function link(string $url)
+    {
+        if ($this->is_full_url($url)) {
+            return $url;
+        }
+        
+        $scheme = parse_url($this->domain_url, PHP_URL_SCHEME);
+        $host   = parse_url($this->domain_url, PHP_URL_HOST);
+        
+        return sprintf('%s://%s/%s', $scheme, $host, trim($url, '/'));
+    }
+    
+    /**
+     * Category url must be contains domain
+     *
+     * @param $url string
+     *
+     * @return boolean
+     */
+    private function is_full_url($url)
+    {
+        return preg_match('/^(https?:\/\/).*$/i', $url) > 0;
     }
 }
