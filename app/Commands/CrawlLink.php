@@ -7,9 +7,6 @@ libxml_use_internal_errors(true);
 
 use phpQuery;
 use \TypeRocket\Console\Command;
-use App\Models\CrawlCategory;
-use App\Models\CrawlDomain;
-use App\Models\CrawlSetting;
 
 class CrawlData extends Command
 {
@@ -98,7 +95,7 @@ class CrawlData extends Command
     protected function getCategorySelectors()
     {
         $result  = [];
-        $domains = (new CrawlDomain())
+        $domains = tr_get_model('CrawlDomain')
             ->findAll()
             ->select('id', 'archive_options', 'single_options', 'domain_url')
             ->get();
@@ -123,7 +120,7 @@ class CrawlData extends Command
     protected function getCategoryUrls(array $categoryIds = [])
     {
         $result     = [];
-        $categories = (new CrawlCategory())
+        $categories = tr_get_model('CrawlCategory')
             ->where('id', 'IN', $categoryIds)
             ->select('crawl_domain_id', 'category_url')
             ->get();
@@ -158,7 +155,7 @@ class CrawlData extends Command
     protected function getCategoryIds()
     {
         // Get crawl settings
-        $settings = new CrawlSetting();
+        $settings = tr_get_model('CrawlSetting');
         $settings = $settings->findAll()->select('categories')->get();
 
         // Get categories url
