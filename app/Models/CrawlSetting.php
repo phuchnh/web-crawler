@@ -40,6 +40,9 @@ class CrawlSetting extends Model
     
     public static function unique_array($value)
     {
+        if ( ! is_array($value)) {
+            return null;
+        }
         return array_unique($value, SORT_REGULAR);
     }
     
