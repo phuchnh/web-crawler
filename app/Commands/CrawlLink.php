@@ -56,14 +56,18 @@ class CrawlLink extends Command
             }
             
             try {
-                $links = [];
-                foreach (pq($selector)->elements as $element) {
-                    /**@var $element \DOMElement */
-                    $links[] = sprintf("('%s', '%s')", $this->link($element->getAttribute('href')),
-                        esc_sql($single_options));
-                }
+                $elements = pq($selector)->elements;
             } catch (\Exception $exception) {
                 continue;
+            }
+            
+            $links = [];
+            if (count($elements) > 0) {
+                foreach ($elements as $element) {
+                    /**@var $element \DOMElement */
+                    $link    = $this->link($element->getAttribute('href'));
+                    $links[] = sprintf("('%s', '%s')", $link, esc_sql($single_options));
+                }
             }
             
             $this->createMany($links);
@@ -191,8 +195,10 @@ class CrawlLink extends Command
     {
         global $wpdb;
         $crawl_link_table = $wpdb->prefix.'crawl_links';
-        $sql              = "INSERT INTO {$crawl_link_table} (`link`, `options`) VALUES ".implode(',', $links).';';
-        $wpdb->query($sql);
+        if (count($links) > 0) {
+            $sql = "INSERT INTO {$crawl_link_table} (`link`, `options`) VALUES ".implode(',', $links).';';
+            $wpdb->query($sql);
+        }
     }
     
     protected function deleteDuplicateRows()
