@@ -56,17 +56,18 @@ class CrawlLink extends Command
             }
             
             try {
-                $links = pq($selector)->map(function (\DOMElement $element) use ($single_options) {
-                    return sprintf("('%s', '%s')", $this->link($element->getAttribute('href')),
+                $links = [];
+                foreach (pq($selector)->elements as $element) {
+                    /**@var $element \DOMElement */
+                    $links[] = sprintf("('%s', '%s')", $this->link($element->getAttribute('href')),
                         esc_sql($single_options));
-                });
+                }
             } catch (\Exception $exception) {
                 continue;
             }
             
-            $links = $links->elements;
-            
             $this->createMany($links);
+            $this->deleteDuplicateRows();
             
             // Next
             $index++;
@@ -94,7 +95,7 @@ class CrawlLink extends Command
             $matched = array_search($category['category_id'], array_column($settings, 'category_id'), true);
             
             if ($matched > -1) {
-                $limit = (int)array_get($settings[$matched], 'page');
+                $limit = (int)array_get($settings[$matched], 'page', 1);
                 $links = [];
                 for ($i = 1; $i <= $limit; $i++) {
                     $value                 = $categories[$matched];
@@ -191,6 +192,14 @@ class CrawlLink extends Command
         global $wpdb;
         $crawl_link_table = $wpdb->prefix.'crawl_links';
         $sql              = "INSERT INTO {$crawl_link_table} (`link`, `options`) VALUES ".implode(',', $links).';';
+        $wpdb->query($sql);
+    }
+    
+    protected function deleteDuplicateRows()
+    {
+        global $wpdb;
+        $crawl_link_table = $wpdb->prefix.'crawl_links';
+        $sql              = "DELETE t1 FROM {$crawl_link_table} t1 INNER JOIN {$crawl_link_table} t2 WHERE t1.id < t2.id AND t1.link = t2.link;";
         $wpdb->query($sql);
     }
     

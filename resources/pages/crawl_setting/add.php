@@ -22,7 +22,7 @@ $options = array_map(function (\App\Models\CrawlCategory $value) {
 }, (array)(new \App\Models\CrawlCategory)->findAll()->get() ?? []);
 
 $repeater = $form->repeater('categories');
-$repeater->setFields([$select]);
+$repeater->setFields([$form->row($select, $form->text('page')->setLabel('Page')->setDefault(1))]);
 $repeater->setLabel('Categories');
 
 // Render form
