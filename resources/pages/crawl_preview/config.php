@@ -1,8 +1,5 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
-
-(new \App\Commands\CrawlLink())->exec();
-
 /**@var $form \TypeRocket\Elements\Form */
 
 $form->useUrl('POST', 'crawler/preview');

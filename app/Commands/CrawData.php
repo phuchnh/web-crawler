@@ -23,7 +23,10 @@ class CrawData extends Command
         // If you want to accept arguments
         // $this->addArgument('arg', self::REQUIRED, 'Description');
     }
-
+    
+    /**
+     * @throws \Exception
+     */
     public function exec()
     {
         $links  = tr_get_model('CrawlLink');
@@ -38,7 +41,12 @@ class CrawData extends Command
         // When command executes
         $this->success('Execute!');
     }
-
+    
+    /**
+     * @param  array  $rows
+     *
+     * @throws \Exception
+     */
     private function update(array $rows)
     {
         $total = count($rows);
@@ -57,8 +65,14 @@ class CrawData extends Command
             }
 
             $this->domain_url = $match[0];
-
-            $html = phpQuery::newDocumentFile($model->link);
+    
+            try {
+                $html = phpQuery::newDocumentFile($model->link);
+            } catch (\Exception $exception) {
+                continue;
+            }
+            
+            
             if ( ! $html) {
                 continue;
             }
@@ -70,9 +84,13 @@ class CrawData extends Command
                 $title    = array_get($option, 'title');
                 $type     = array_get($option, 'type');
                 $selector = array_get($option, 'selector');
-
-                /**@var  $element \phpQueryObject */
-                $element = pq($selector);
+    
+                try {
+                    /**@var  $element \phpQueryObject */
+                    $element = pq($selector);
+                } catch (\Exception $exception) {
+                    continue;
+                }
 
                 if ($element === null) {
                     $item[$title] = $value;
