@@ -4,7 +4,6 @@ namespace App\Commands;
 
 libxml_use_internal_errors(true);
 
-
 use phpQuery;
 use \TypeRocket\Console\Command;
 
@@ -14,67 +13,106 @@ class CrawlLink extends Command
      * @var string
      */
     protected $domain_url;
-
+    
     protected $command = [
         'app:craw-link',
         'Short description here',
         'Longer help text goes here.',
     ];
-
+    
     protected function config()
     {
         // If you want to accept arguments
         // $this->addArgument('arg', self::REQUIRED, 'Description');
     }
-
+    
     /**
      * @throws \Exception
      */
     public function exec()
     {
-        $categoryIds       = $this->getCategoryIds();
+        $settings          = $this->getCategorySettings();
+        $categoryIds       = array_pluck($settings, 'category_id');
         $categoryUrls      = $this->getCategoryUrls($categoryIds);
         $categorySelectors = $this->getCategorySelectors();
         $categorySettings  = $this->mapSelectors($categoryUrls, $categorySelectors);
-
+        $categorySettings  = $this->mapPagination($settings, $categorySettings);
+        
         $index = 0;
         do {
             $url              = array_get($categorySettings[$index], 'category_url');
             $selector         = array_get($categorySettings[$index], 'selector');
             $single_options   = array_get($categorySettings[$index], 'single_options');
             $this->domain_url = array_get($categorySettings[$index], 'domain_url');
-            $html             = phpQuery::newDocumentFileHTML($url);
-
+            
+            try {
+                $html = phpQuery::newDocumentFileHTML($url);
+            } catch (\Exception $exception) {
+                continue;
+            }
+            
             if ( ! $html) {
                 continue;
             }
-
+            
             try {
                 $links = pq($selector)->map(function (\DOMElement $element) use ($single_options) {
-                    return sprintf("('%s', '%s')",
-                        $this->link($element->getAttribute('href')),
-                        esc_sql($single_options)
-                    );
+                    return sprintf("('%s', '%s')", $this->link($element->getAttribute('href')),
+                        esc_sql($single_options));
                 });
             } catch (\Exception $exception) {
                 continue;
             }
-
+            
             $links = $links->elements;
-
+            
             $this->createMany($links);
-
+            
             // Next
             $index++;
         } while ($index < count($categorySettings));
-
+        
         // When command executes
-        $this->success('Execute!');
+        echo 'Success';
     }
-
+    
     /**
-     * @param  array $categoryUrls
-     * @param  array $categorySelectors
+     * Create links by pagination
+     *
+     * @param  array  $settings
+     * @param  array  $categories
+     *
+     * @return array
+     */
+    protected function mapPagination(array $settings, array $categories)
+    {
+        $result = [];
+        $index  = 0;
+        while ($index < count($categories)) {
+            $category = $categories[$index];
+            
+            $matched = array_search($category['category_id'], array_column($settings, 'category_id'), true);
+            
+            if ($matched > -1) {
+                $limit = (int)array_get($settings[$matched], 'page');
+                $links = [];
+                for ($i = 1; $i <= $limit; $i++) {
+                    $value                 = $categories[$matched];
+                    $value['category_url'] = $value['category_url'].'?page='.$i;
+                    $links[]               = $value;
+                }
+                
+                $result = array_merge($result, $links);
+            }
+            $index++;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * @param  array  $categoryUrls
+     * @param  array  $categorySelectors
      *
      * @return array
      */
@@ -92,10 +130,10 @@ class CrawlLink extends Command
                 $result[]                = $value;
             }
         }
-
+        
         return $result;
     }
-
+    
     /**
      * @return array
      * @throws \Exception
@@ -107,7 +145,7 @@ class CrawlLink extends Command
             ->findAll()
             ->select('id', 'archive_options', 'single_options', 'domain_url')
             ->get();
-
+        
         foreach ((array)$domains as $domain) {
             $value['id']              = $domain->id;
             $value['domain_url']      = $domain->domain_url;
@@ -115,12 +153,12 @@ class CrawlLink extends Command
             $value['single_options']  = array_get($domain->getPropertiesUnaltered(), 'single_options');
             $result[]                 = $value;
         }
-
+        
         return $result;
     }
-
+    
     /**
-     * @param  array $categoryIds
+     * @param  array  $categoryIds
      *
      * @return array
      * @throws \Exception
@@ -130,51 +168,53 @@ class CrawlLink extends Command
         $result     = [];
         $categories = tr_get_model('CrawlCategory')
             ->where('id', 'IN', $categoryIds)
-            ->select('crawl_domain_id', 'category_url')
+            ->select('crawl_domain_id', 'category_url', 'id')
             ->get();
-
+        
         foreach ($categories as $category) {
-            $value['crawl_domain_id'] = $category->crawl_domain_id;
-            $value['category_url']    = $category->category_url;
+            $value['crawl_domain_id'] = data_get($category, 'crawl_domain_id');
+            $value['category_url']    = data_get($category, 'category_url');
+            $value['category_id']     = data_get($category, 'id');
             $result[]                 = $value;
         }
-
+        
         return $result;
     }
-
+    
     /**
      * Insert multiple row
      *
-     * @param  array $links
+     * @param  array  $links
      */
     protected function createMany(array $links)
     {
         global $wpdb;
-        $crawl_link_table = $wpdb->prefix . 'crawl_links';
-        $sql              = "INSERT INTO {$crawl_link_table} (`link`, `options`) VALUES " . implode(',', $links) . ';';
+        $crawl_link_table = $wpdb->prefix.'crawl_links';
+        $sql              = "INSERT INTO {$crawl_link_table} (`link`, `options`) VALUES ".implode(',', $links).';';
         $wpdb->query($sql);
     }
-
-
+    
+    
     /**
      * @return array
      * @throws \Exception
      */
-    protected function getCategoryIds()
+    protected function getCategorySettings()
     {
-        // Get crawl settings
+        // Get all crawl settings
         $settings = tr_get_model('CrawlSetting');
-        $settings = $settings->findAll()->select('categories')->get();
-
-        // Get categories url
-        $categoru_urls = [];
-        foreach ((array)$settings as $setting) {
-            $categoru_urls[] = array_column($setting->categories, 'category_url');
+        $settings = (array)$settings->findAll()->select('categories')->get();
+        $result   = [];
+        
+        // Map category_id and pagination
+        foreach ($settings as $setting) {
+            /**@var $setting \App\Models\CrawlSetting */
+            $result = array_merge($result, $setting->categories);
         }
-
-        return array_flatten($categoru_urls);
+        
+        return $result;
     }
-
+    
     /**
      * @param $url string
      *
@@ -185,10 +225,10 @@ class CrawlLink extends Command
         if (preg_match('/^(https?:\/\/).*$/i', $url) > 0) {
             return $url;
         }
-
+        
         $scheme = parse_url($this->domain_url, PHP_URL_SCHEME);
         $host   = parse_url($this->domain_url, PHP_URL_HOST);
-
+        
         return sprintf('%s://%s/%s', $scheme, $host, trim($url, '/'));
     }
 }

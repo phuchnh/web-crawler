@@ -11,7 +11,7 @@ $domains->setModelOptions(new \App\Models\CrawlDomain, 'domain_url', 'id');
 $domains->setAttribute('id', 'domain');
 $domains->setAttribute('class', 'select2');
 
-$select = $form->select('category_url');
+$select = $form->select('category_id');
 $select->setModelOptions((new \App\Models\CrawlCategory)->where('crawl_domain_id', $domain_id), 'category_url', 'id');
 $select->setAttribute('class', 'select2');
 $select->setLabel('Category URL');
@@ -25,7 +25,7 @@ $options = array_map(function (\App\Models\CrawlCategory $value) {
 }, (array)(new \App\Models\CrawlCategory)->findAll()->get() ?? []);
 
 $repeater = $form->repeater('categories');
-$repeater->setFields([$select]);
+$repeater->setFields([$form->row($select, $form->text('page')->setLabel('Page'))]);
 $repeater->setLabel('Categories');
 
 // Render form
@@ -65,7 +65,7 @@ echo $form->close();
 
         // Remove unused element after re-init select2
         $select.last().next().next().remove();
-        
+
         getCategoriesBelongsToDomain($domain.val(), $select);
       });
 

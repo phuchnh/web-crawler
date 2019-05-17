@@ -9,7 +9,7 @@ $domains->setModelOptions(new \App\Models\CrawlDomain, 'domain_url', 'id');
 $domains->setAttribute('id', 'domain');
 $domains->setAttribute('class', 'select2');
 
-$select = $form->select('category_url');
+$select = $form->select('category_id');
 $select->setAttribute('class', 'select2');
 $select->setLabel('Category URL');
 

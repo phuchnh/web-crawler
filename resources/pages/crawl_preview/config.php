@@ -1,7 +1,7 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
 
-(new \App\Commands\CrawData())->exec();
+(new \App\Commands\CrawlLink())->exec();
 
 /**@var $form \TypeRocket\Elements\Form */
 
