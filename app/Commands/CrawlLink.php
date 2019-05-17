@@ -36,17 +36,20 @@ class CrawlLink extends Command
      */
     public function exec()
     {
-        $settings      = $this->getCategorySettings();
-        $cateIds       = array_pluck($settings, 'category_id');
-        $cateUrls      = $this->getCategoryUrls($cateIds);
-        $cateSelectors = $this->getCategorySelectors();
-        $cateSettings  = $this->mapSelectors($cateUrls, $cateSelectors);
-        $cateSettings  = array_chunk($this->mapPagination($settings, $cateSettings), 50);
-
-        foreach ($cateSettings as $setting) {
-            $this->crawl($setting);
+        $settings = $this->getCategorySettings();
+        if (count($settings) > 0) {
+            $cateIds       = array_pluck($settings, 'category_id');
+            $cateUrls      = $this->getCategoryUrls($cateIds);
+            $cateSelectors = $this->getCategorySelectors();
+            $cateSettings  = $this->mapSelectors($cateUrls, $cateSelectors);
+            $cateSettings  = array_chunk($this->mapPagination($settings, $cateSettings), 50);
+            foreach ($cateSettings as $setting) {
+                $this->crawl($setting);
+            }
         }
 
+        $settings = tr_get_model('CrawlSetting');
+        $settings->where('status', '<>', true)->update(['status' => true]);
         // When command executes
         echo 'Success';
     }
@@ -238,7 +241,9 @@ class CrawlLink extends Command
     {
         // Get all crawl settings
         $settings = tr_get_model('CrawlSetting');
-        $settings = (array)$settings->findAll()->select('categories')->get();
+        $settings = (array)$settings->where('status', '<>', true)
+                                    ->select('categories')
+                                    ->get();
 
         /**
          * Map category_id and pagination

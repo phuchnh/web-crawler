@@ -78,6 +78,7 @@ class Web_Crawler_Activator
               crawl_domain_id  int(11) UNSIGNED                   NOT NULL,
               categories       longtext,
               options          longtext,
+              status           boolean  DEFAULT FALSE,
               created_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
               updated_at       datetime DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
               PRIMARY KEY (id),

@@ -30,7 +30,7 @@ class CrawData extends Command
     public function exec()
     {
         $links  = tr_get_model('CrawlLink');
-        $links  = $links->where('status', '<>', 1);
+        $links  = $links->where('status', '<>', true);
         $chunks = array_chunk((array)$links->get(), 50);
 
 
