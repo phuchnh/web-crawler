@@ -36,14 +36,29 @@ class CrawlLink extends Command
         $categoryUrls      = $this->getCategoryUrls($categoryIds);
         $categorySelectors = $this->getCategorySelectors();
         $categorySettings  = $this->mapSelectors($categoryUrls, $categorySelectors);
-        $categorySettings  = $this->mapPagination($settings, $categorySettings);
+        $categorySettings  = array_chunk($this->mapPagination($settings, $categorySettings), 50);
         
+        foreach ($categorySettings as $setting) {
+            $this->crawl($setting);
+        }
+        
+        // When command executes
+        echo 'Success';
+    }
+    
+    /**
+     * Start crawl links
+     *
+     * @param  array  $categories
+     */
+    protected function crawl(array $categories)
+    {
         $index = 0;
         do {
-            $url              = array_get($categorySettings[$index], 'category_url');
-            $selector         = array_get($categorySettings[$index], 'selector');
-            $single_options   = array_get($categorySettings[$index], 'single_options');
-            $this->domain_url = array_get($categorySettings[$index], 'domain_url');
+            $url              = array_get($categories[$index], 'category_url');
+            $selector         = array_get($categories[$index], 'selector');
+            $single_options   = array_get($categories[$index], 'single_options');
+            $this->domain_url = array_get($categories[$index], 'domain_url');
             
             try {
                 $html = phpQuery::newDocumentFileHTML($url);
@@ -75,10 +90,7 @@ class CrawlLink extends Command
             
             // Next
             $index++;
-        } while ($index < count($categorySettings));
-        
-        // When command executes
-        echo 'Success';
+        } while ($index < count($categories));
     }
     
     /**
