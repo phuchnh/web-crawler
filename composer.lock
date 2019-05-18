@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b29c80c736d2c145560a2c71944b3e4",
+    "content-hash": "520710fcc77c42fa6dd1fa8befc807ee",
     "packages": [
         {
             "name": "psr/log",
@@ -55,48 +55,37 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.4.27",
+            "version": "v3.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "15a9104356436cb26e08adab97706654799d31d8"
+                "reference": "047f16485d68c083bd5d9b73ff16f9cb9c1a9f52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/15a9104356436cb26e08adab97706654799d31d8",
-                "reference": "15a9104356436cb26e08adab97706654799d31d8",
+                "url": "https://api.github.com/repos/symfony/console/zipball/047f16485d68c083bd5d9b73ff16f9cb9c1a9f52",
+                "reference": "047f16485d68c083bd5d9b73ff16f9cb9c1a9f52",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5.9|>=7.0.8",
-                "symfony/debug": "~2.8|~3.0|~4.0",
+                "php": ">=5.5.9",
+                "symfony/debug": "~2.8|~3.0",
                 "symfony/polyfill-mbstring": "~1.0"
-            },
-            "conflict": {
-                "symfony/dependency-injection": "<3.4",
-                "symfony/process": "<3.3"
-            },
-            "provide": {
-                "psr/log-implementation": "1.0"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~3.3|~4.0",
-                "symfony/dependency-injection": "~3.4|~4.0",
-                "symfony/event-dispatcher": "~2.8|~3.0|~4.0",
-                "symfony/lock": "~3.4|~4.0",
-                "symfony/process": "~3.3|~4.0"
+                "symfony/event-dispatcher": "~2.8|~3.0",
+                "symfony/process": "~2.8|~3.0"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
                 "symfony/event-dispatcher": "",
-                "symfony/lock": "",
                 "symfony/process": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.4-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -123,36 +112,36 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-08T09:29:13+00:00"
+            "time": "2017-01-08T20:43:43+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v4.2.8",
+            "version": "v3.4.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "2d279b6bb1d582dd5740d4d3251ae8c18812ed37"
+                "reference": "681afbb26488903c5ac15e63734f1d8ac430c9b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/2d279b6bb1d582dd5740d4d3251ae8c18812ed37",
-                "reference": "2d279b6bb1d582dd5740d4d3251ae8c18812ed37",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/681afbb26488903c5ac15e63734f1d8ac430c9b9",
+                "reference": "681afbb26488903c5ac15e63734f1d8ac430c9b9",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1.3",
+                "php": "^5.5.9|>=7.0.8",
                 "psr/log": "~1.0"
             },
             "conflict": {
-                "symfony/http-kernel": "<3.4"
+                "symfony/http-kernel": ">=2.3,<2.3.24|~2.4.0|>=2.5,<2.5.9|>=2.6,<2.6.2"
             },
             "require-dev": {
-                "symfony/http-kernel": "~3.4|~4.0"
+                "symfony/http-kernel": "~2.8|~3.0|~4.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.2-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -179,7 +168,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-11T11:27:41+00:00"
+            "time": "2019-04-11T09:48:14+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -242,30 +231,29 @@
         },
         {
             "name": "typerocket/core",
-            "version": "v4.0.24",
+            "version": "v3.0.58",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TypeRocket/core.git",
-                "reference": "cf53692c6f2a4273d87f46f30cb17217e767cdd6"
+                "reference": "efa2dc83b0b78788010cae74efb0dc4c2453b05b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TypeRocket/core/zipball/cf53692c6f2a4273d87f46f30cb17217e767cdd6",
-                "reference": "cf53692c6f2a4273d87f46f30cb17217e767cdd6",
+                "url": "https://api.github.com/repos/TypeRocket/core/zipball/efa2dc83b0b78788010cae74efb0dc4c2453b05b",
+                "reference": "efa2dc83b0b78788010cae74efb0dc4c2453b05b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7",
-                "symfony/console": "3.4.*"
+                "php": ">=5.5.9",
+                "symfony/console": "3.1.*"
             },
             "require-dev": {
-                "phpunit/phpunit": "7.4.*"
+                "phpunit/phpunit": "4.8.*"
             },
             "type": "library",
             "autoload": {
                 "files": [
-                    "functions/functions.php",
-                    "functions/helpers.php"
+                    "helpers.php"
                 ],
                 "psr-4": {
                     "TypeRocket\\": "src/"
@@ -278,18 +266,16 @@
             "authors": [
                 {
                     "name": "Kevin Dees",
-                    "homepage": "https://kevdees.com",
-                    "role": "Creator"
+                    "email": "kevin.dees2@gmail.com"
                 }
             ],
             "description": "The TypeRocket WordPress Framework.",
-            "homepage": "https://typerocket.com",
+            "homepage": "http://typerocket.com",
             "keywords": [
                 "framework",
-                "typerocket",
-                "wordpress"
+                "typerocket"
             ],
-            "time": "2019-05-09T18:08:24+00:00"
+            "time": "2019-04-15T20:08:13+00:00"
         },
         {
             "name": "typerocket/plugin-builder",
@@ -419,16 +405,16 @@
         },
         {
             "name": "typerocket/plugin-seo",
-            "version": "v4.0.0",
+            "version": "v4.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TypeRocket/plugin-seo.git",
-                "reference": "08f873074409e0ce1fe71aefbc59af7777431f27"
+                "reference": "19931f03fa273126d4836c0272256e0ab7ab7276"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TypeRocket/plugin-seo/zipball/08f873074409e0ce1fe71aefbc59af7777431f27",
-                "reference": "08f873074409e0ce1fe71aefbc59af7777431f27",
+                "url": "https://api.github.com/repos/TypeRocket/plugin-seo/zipball/19931f03fa273126d4836c0272256e0ab7ab7276",
+                "reference": "19931f03fa273126d4836c0272256e0ab7ab7276",
                 "shasum": ""
             },
             "require": {
@@ -457,7 +443,7 @@
                 "plugin",
                 "typerocket"
             ],
-            "time": "2019-04-24T05:06:03+00:00"
+            "time": "2019-05-14T22:24:32+00:00"
         },
         {
             "name": "typerocket/plugin-theme-options",
@@ -509,7 +495,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7"
+        "php": ">=5.5.9"
     },
     "platform-dev": []
 }
