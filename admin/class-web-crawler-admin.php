@@ -247,9 +247,8 @@ class Web_Crawler_Admin
      */
     public function handle_crawl_schedule_event()
     {
-        $data             = new \App\Models\CrawlDomain();
-        $data->domain_url = 'https://bepelegant.vn/handle_crawl_schedule_event';
-        $data->save();
+        (new \App\Commands\CrawlLink())->exec();
+        (new \App\Commands\CrawData())->exec();
     }
 
 }
