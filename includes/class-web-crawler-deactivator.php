@@ -30,7 +30,11 @@ class Web_Crawler_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+        static::deactivate_crawl_schedule_event();
 	}
+
+	private static function deactivate_crawl_schedule_event() {
+        wp_clear_scheduled_hook('crawl_schedule_event');
+    }
 
 }

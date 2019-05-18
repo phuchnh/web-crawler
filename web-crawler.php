@@ -55,6 +55,17 @@ function deactivate_web_crawler() {
 	Web_Crawler_Deactivator::deactivate();
 }
 
+function add_custom_cron_intervals($schedules)
+{
+    $schedules['five_minutes'] = [
+        'interval' => 60 * 5,
+        'display'  => __('Once Every 5 Minutes'),
+    ];
+    
+    return $schedules;
+}
+
+add_filter('cron_schedules', 'add_custom_cron_intervals');
 register_activation_hook( __FILE__, 'activate_web_crawler' );
 register_deactivation_hook( __FILE__, 'deactivate_web_crawler' );
 
@@ -62,6 +73,7 @@ register_deactivation_hook( __FILE__, 'deactivate_web_crawler' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
+require_once plugin_dir_path( __FILE__ ) . 'init.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-web-crawler.php';
 
 /**
@@ -74,9 +86,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-web-crawler.php';
  * @since    1.0.0
  */
 function run_web_crawler() {
-
+	
 	$plugin = new Web_Crawler();
 	$plugin->run();
-
+	
 }
+
 run_web_crawler();

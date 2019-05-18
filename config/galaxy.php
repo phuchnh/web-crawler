@@ -11,7 +11,7 @@ return [
     | Example of root installation: TR_PATH . '/wordpress'
     |
     */
-    'wordpress' => false,
+    'wordpress' => TR_PATH . '/wordpress',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,5 +22,7 @@ return [
     | framework see http://symfony.com/doc/current/console.html
     |
     */
-    'commands' => []
+    'commands' => [
+        \App\Commands\CrawlLink::class,
+    ]
 ];
